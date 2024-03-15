@@ -38,14 +38,14 @@ export default defineConfig({
       testDir: './tests/api',
       use: {
         // All requests we send go to this API endpoint.
-        baseURL: 'https://api.storyprotocol.net',
+        baseURL: process.env.API_BASE_URL,
         extraHTTPHeaders: {
           // We set this header per GitHub guidelines.
           'accept': 'application/json',
           'content-type': 'application/json',
           // Add authorization token to all requests.
           // Assuming personal access token available in the environment.
-          'X-API-Key': 'U3RvcnlQcm90b2NvbFRlc3RBUElLRVk=',
+          'X-API-Key': process.env.API_KEY || '',
         },
       }
     },

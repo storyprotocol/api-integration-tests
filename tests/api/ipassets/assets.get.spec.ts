@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { ApiPrefix } from "../../constants";
 
-const endpoint = "/api/v1/assets";
+const endpoint = ApiPrefix + "/assets";
 
 test.describe("Get an IPAsset @IPAssets", () => {
   const params = [
@@ -16,7 +17,6 @@ test.describe("Get an IPAsset @IPAssets", () => {
 
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
-      console.log(data);
       if (exists) {
         expect(data.id).toBe(assetId);
         expect(typeof data.tokenId).toBe("string");
@@ -38,9 +38,9 @@ test.describe("Get an IPAsset @IPAssets", () => {
     });
   }
 
-  test("Should return 403 for no assetId", async ({ request }) => {
+  test("Should return 404 for no assetId", async ({ request }) => {
     const response = await request.get(endpoint);
-    expect(response.status()).toBe(403);
+    expect(response.status()).toBe(404);
   });
 
   test("Should return 500 for invalid assetId", async ({ request }) => {

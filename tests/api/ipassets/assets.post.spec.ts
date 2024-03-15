@@ -1,6 +1,7 @@
 import { test, expect } from "@playwright/test";
+import { ApiPrefix } from "../../constants";
 
-const endpoint = "/api/v1/assets";
+const endpoint = ApiPrefix + "/assets";
 
 test.describe("List IPAssets @IPAssets", async () => {
   test("Should return default IPAssets list", async ({ request }) => {
@@ -242,15 +243,18 @@ test.describe("List IPAssets @IPAssets", async () => {
 
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
+      expect(data.length).toBeGreaterThan(0);
       expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
-        expect(data[i]).toMatchObject(p.where);
         if (p.orderDirection === "asc") {
           expect(data[i][p.orderBy] <= data[i + 1][p.orderBy]).toBeTruthy;
         } else {
           expect(data[i][p.orderBy] >= data[i + 1][p.orderBy]).toBeTruthy;
         }
       }
+      data.forEach((item: object) => {
+        expect(item).toMatchObject(p.where);
+      });
     });
   }
 });
