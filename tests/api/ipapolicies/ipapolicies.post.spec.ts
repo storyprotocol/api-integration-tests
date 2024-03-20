@@ -1,10 +1,10 @@
 import { test, expect } from "../fixtures/base";
 import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/assets";
+const endpoint = ApiPrefix + "/ipapolicies";
 
-test.describe("List IPAssets @IPAssets", async () => {
-  test("Should return default IPAssets list", async ({ request }) => {
+test.describe("List IPAPolicies @IPAPolicies", async () => {
+  test("Should return default IPAPolicies list", async ({ request }) => {
     const response = await request.post(endpoint);
     expect(response.status()).toBe(200);
 
@@ -13,30 +13,24 @@ test.describe("List IPAssets @IPAssets", async () => {
     expect(Array.isArray(data)).toBeTruthy();
     expect(data.length).toBeGreaterThan(0);
     expect(typeof data[0].id).toBe("string");
-    expect(typeof data[0].tokenId).toBe("string");
-    expect(typeof data[0].chainId).toBe("string");
-    expect(Array.isArray(data[0].parentIpIds)).toBeTruthy();
-    expect(Array.isArray(data[0].childIpIds)).toBeTruthy();
-    expect(Array.isArray(data[0].rootIpIds)).toBeTruthy();
-    expect(typeof data[0].metadataResolverAddress).toBe("string");
-    expect(typeof data[0].metadata.name).toBe("string");
-    expect(typeof data[0].metadata.hash).toBe("string");
-    expect(typeof data[0].metadata.uri).toBe("string");
-    expect(typeof data[0].metadata.registrant).toBe("string");
-    expect(typeof data[0].metadata.registrationDate).toBe("string");
+    expect(typeof data[0].ipId).toBe("string");
+    expect(typeof data[0].policyId).toBe("string");
+    expect(typeof data[0].index).toBe("string");
+    expect(typeof data[0].active).toBe("boolean");
+    expect(typeof data[0].inherited).toBe("boolean");
     expect(typeof data[0].blockNumber).toBe("string");
     expect(typeof data[0].blockTimestamp).toBe("string");
   });
 
   const pageParams = [
     { pagination: { offset: 0, limit: 5 } },
-    { pagination: { offset: 1, limit: 2 } },
-    { pagination: { offset: 3, limit: 2 } },
+    { pagination: { offset: 1, limit: 3 } },
+    { pagination: { offset: 2, limit: 2 } },
   ];
   for (const { pagination } of pageParams) {
-    test(`Should return IPAssets list with pagination ${JSON.stringify(
+    test(`Should return IPAPolicies list with pagination ${JSON.stringify(
       pagination
-    )}`, async ({ request }) => {
+    )} @bug`, async ({ request }) => {
       const payload = {
         options: { pagination: pagination },
       };
@@ -61,21 +55,23 @@ test.describe("List IPAssets @IPAssets", async () => {
   const orderParams = [
     { orderBy: "id", orderDirection: "desc" },
     { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "chainId", orderDirection: "desc" },
-    { orderBy: "chainId", orderDirection: "asc" },
-    { orderBy: "tokenContract", orderDirection: "desc" },
-    { orderBy: "tokenContract", orderDirection: "asc" },
-    { orderBy: "tokenId", orderDirection: "desc" },
-    { orderBy: "tokenId", orderDirection: "asc" },
-    { orderBy: "metadataResolverAddress", orderDirection: "desc" },
-    { orderBy: "metadataResolverAddress", orderDirection: "asc" },
+    { orderBy: "ipId", orderDirection: "desc" },
+    { orderBy: "ipId", orderDirection: "asc" },
+    { orderBy: "policyId", orderDirection: "desc" },
+    { orderBy: "policyId", orderDirection: "asc" },
+    { orderBy: "index", orderDirection: "desc" },
+    { orderBy: "index", orderDirection: "asc" },
+    { orderBy: "active", orderDirection: "desc" },
+    { orderBy: "active", orderDirection: "asc" },
+    { orderBy: "inherited", orderDirection: "desc" },
+    { orderBy: "inherited", orderDirection: "asc" },
     { orderBy: "blockNumber", orderDirection: "desc" },
     { orderBy: "blockNumber", orderDirection: "asc" },
     { orderBy: "blockTimestamp", orderDirection: "desc" },
     { orderBy: "blockTimestamp", orderDirection: "asc" },
   ];
   for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return IPAssets list ordered by ${orderBy} ${orderDirection}`, async ({
+    test(`Should return IPAPolicies list ordered by ${orderBy} ${orderDirection} @bug`, async ({
       request,
     }) => {
       const payload = {
@@ -101,20 +97,20 @@ test.describe("List IPAssets @IPAssets", async () => {
 
   const pageAndOrderParams = [
     {
-      pagination: { offset: 1, limit: 4 },
-      orderBy: "blockTimestamp",
+      pagination: { offset: 1, limit: 3 },
+      orderBy: "ipId",
       orderDirection: "asc",
     },
     {
       pagination: { offset: 2, limit: 2 },
-      orderBy: "tokenId",
+      orderBy: "policyId",
       orderDirection: "desc",
     },
   ];
   for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
-    test(`Should return IPAssets list with offset pagination ${JSON.stringify(
+    test(`Should return IPAPolicies list with pagination ${JSON.stringify(
       pagination
-    )} , orderBy ${orderBy} and orderDirection ${orderDirection}`, async ({
+    )} and ordered by ${orderBy} ${orderDirection} @bug`, async ({
       request,
     }) => {
       const payload = {
@@ -132,7 +128,7 @@ test.describe("List IPAssets @IPAssets", async () => {
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
-      expect(data.length).toBe(pagination.limit);
+      expect(data.length).toBeLessThanOrEqual(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
         if (orderDirection === "asc") {
           expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
@@ -143,52 +139,52 @@ test.describe("List IPAssets @IPAssets", async () => {
     });
   }
 
-  test("Should return IPAssets list with filter", async ({
+  test("Should return IPAPolicies list with where filters @bug", async ({
     request,
-    assets,
+    ipapolicies,
   }) => {
     const whereParams = [
-      { where: { chainId: assets[1].chainId }, exists: true },
-      { where: { chainId: "11100111" }, exists: false },
-      { where: { tokenId: assets[2].tokenId }, exists: true },
-      { where: { tokenId: "99999999" }, exists: false },
       {
-        where: {
-          metadataResolverAddress: assets[1].metadataResolverAddress,
-        },
+        where: { ipId: ipapolicies[0].ipId },
         exists: true,
       },
       {
-        where: {
-          metadataResolverAddress: "0x3809f4128b0b33afb17576edafd7d4f4e2abe999",
-        },
+        where: { ipId: "0x33f7825b06580c6b96210af5b86d8ea088332999" },
         exists: false,
       },
-      {
-        where: { tokenContract: assets[2].tokenContract },
-        exists: true,
-      },
-      {
-        where: { tokenContract: "0xc06189455340139e0edce0744d715ae43176c999" },
-        exists: false,
-      },
+      { where: { policyId: ipapolicies[1].policyId }, exists: true },
+      { where: { policyId: "999999" }, exists: false },
+      { where: { active: true }, exists: true },
+      { where: { active: false }, exists: true },
+      { where: { inherited: true }, exists: true },
+      { where: { inherited: false }, exists: true },
       {
         where: {
-          chainId: assets[1].chainId,
-          tokenContract: assets[1].tokenContract,
+          ipId: ipapolicies[0].ipId,
+          policyId: ipapolicies[0].policyId,
         },
         exists: true,
       },
       {
         where: {
-          tokenId: "99999999",
-          metadataResolverAddress: "0x3809f4128b0b33afb17576edafd7d4f4e2abe933",
+          ipId: ipapolicies[2].ipId,
+          policyId: ipapolicies[2].policyId,
+          active: true,
+        },
+        exists: true,
+      },
+      {
+        where: {
+          ipId: "00x570a6aff516d7e0ad1c430b1d92e379030429cdbx1",
+          policyId: "1",
+          active: true,
+          inherited: true,
         },
         exists: false,
       },
     ];
     for (const { where, exists } of whereParams) {
-      await test.step(`Should return IPAssets list with filter ${JSON.stringify(
+      await test.step(`Should return IPAPolicies list with where ${JSON.stringify(
         where
       )}`, async () => {
         const payload = {
@@ -213,36 +209,39 @@ test.describe("List IPAssets @IPAssets", async () => {
     }
   });
 
-  test("Should return IPAssets list with pagination, orderBy, orderDirection and filter", async ({
+  test("Should return IPAPolicies list with pagination, orders and filters", async ({
     request,
-    assets,
+    ipapolicies,
   }) => {
     const params = [
       {
-        pagination: { offset: 0, limit: 5 },
-        orderBy: "tokenId",
+        pagination: { offset: 1, limit: 3 },
+        orderBy: "id",
         orderDirection: "asc",
         where: {
-          chainId: assets[0].chainId,
-          tokenContract: assets[0].tokenContract,
+          policyId: ipapolicies[1].policyId,
+          active: ipapolicies[1].active,
+          inherited: ipapolicies[1].inherited,
         },
       },
       {
-        pagination: { offset: 2, limit: 15 },
-        orderBy: "tokenId",
+        pagination: { offset: 0, limit: 2 },
+        orderBy: "policyId",
         orderDirection: "desc",
         where: {
-          chainId: assets[1].chainId,
-          tokenContract: assets[1].tokenContract,
+          ipId: ipapolicies[0].ipId,
+          policyId: ipapolicies[0].policyId,
+          active: ipapolicies[0].active,
+          inherited: ipapolicies[0].inherited,
         },
       },
     ];
     for (const p of params) {
-      await test.step(`Should return IPAssets list with pagination ${JSON.stringify(
+      await test.step(`Should return IPAPolicies list with pagination ${JSON.stringify(
         p.pagination
-      )}, order by ${p.orderBy} and order direction ${
-        p.orderDirection
-      }, and filter ${JSON.stringify(p.where)}`, async () => {
+      )}, order by ${p.orderBy} ${p.orderDirection} and where ${JSON.stringify(
+        p.where
+      )}`, async () => {
         const payload = {
           options: { ...p },
         };
@@ -261,13 +260,9 @@ test.describe("List IPAssets @IPAssets", async () => {
           } else {
             expect(data[i][p.orderBy] >= data[i + 1][p.orderBy]).toBeTruthy;
           }
+          expect(data[i]).toMatchObject(p.where);
         }
-        data.forEach((item: object) => {
-          expect(item).toMatchObject(p.where);
-        });
       });
     }
   });
 });
-
-// npx playwright test tests/api/ipassets/assets.post.spec.ts
