@@ -90,10 +90,12 @@ test.describe("List IPAssets @IPAssets", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = data[i][orderBy].trim() || "\uFFFF";
+        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item <= nextItem).toBeTruthy();
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item >= nextItem).toBeTruthy();
         }
       }
     });
@@ -134,10 +136,12 @@ test.describe("List IPAssets @IPAssets", async () => {
       expect(data.length).toBeGreaterThan(0);
       expect(data.length).toBe(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = data[i][orderBy].trim() || "\uFFFF";
+        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item <= nextItem).toBeTruthy();
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item >= nextItem).toBeTruthy();
         }
       }
     });
@@ -256,10 +260,12 @@ test.describe("List IPAssets @IPAssets", async () => {
         expect(data.length).toBeGreaterThan(0);
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
         for (let i = 0; i < data.length - 1; i++) {
+          const item = parseInt(data[i][p.orderBy]);
+          const nextItem = parseInt(data[i + 1][p.orderBy]);
           if (p.orderDirection === "asc") {
-            expect(data[i][p.orderBy] <= data[i + 1][p.orderBy]).toBeTruthy;
+            expect(item).toBeLessThanOrEqual(nextItem);
           } else {
-            expect(data[i][p.orderBy] >= data[i + 1][p.orderBy]).toBeTruthy;
+            expect(item).toBeGreaterThanOrEqual(nextItem);
           }
         }
         data.forEach((item: object) => {

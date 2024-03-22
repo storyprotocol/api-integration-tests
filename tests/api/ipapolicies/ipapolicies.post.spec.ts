@@ -86,10 +86,12 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = data[i][orderBy].trim() || "\uFFFF";
+        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item <= nextItem).toBeTruthy();
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item >= nextItem).toBeTruthy();
         }
       }
     });
@@ -130,10 +132,12 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
       expect(data.length).toBeGreaterThan(0);
       expect(data.length).toBeLessThanOrEqual(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = data[i][orderBy].trim() || "\uFFFF";
+        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item <= nextItem).toBeTruthy();
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item >= nextItem).toBeTruthy();
         }
       }
     });
@@ -255,13 +259,17 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
         expect(data.length).toBeGreaterThan(0);
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
         for (let i = 0; i < data.length - 1; i++) {
+          const item = data[i][p.orderBy].trim() || "\uFFFF";
+          const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
           if (p.orderDirection === "asc") {
-            expect(data[i][p.orderBy] <= data[i + 1][p.orderBy]).toBeTruthy;
+            expect(item <= nextItem).toBeTruthy();
           } else {
-            expect(data[i][p.orderBy] >= data[i + 1][p.orderBy]).toBeTruthy;
+            expect(item >= nextItem).toBeTruthy();
           }
-          expect(data[i]).toMatchObject(p.where);
         }
+        data.forEach((item: object) => {
+          expect(item).toMatchObject(p.where);
+        });
       });
     }
   });
