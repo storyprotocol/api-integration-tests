@@ -43,6 +43,32 @@ type TestOptions = {
     owner: string;
     policyId: string;
   }>;
+  modules: Array<{
+    id: string;
+    name: string;
+  }>;
+  permissionsList: Array<{
+    id: string;
+    signer: string;
+    to: string;
+  }>;
+  policies: Array<{
+    id: string;
+    mintingFeeToken: string;
+    policyFrameworkManager: string;
+    royaltyPolicy: boolean;
+  }>;
+  policiesFrameworks: Array<{
+    id: string;
+    name: string;
+    address: string;
+  }>;
+  transactions: Array<{
+    id: string;
+    ipId: string;
+    resourceId: string;
+    actionType: string;
+  }>;
 };
 
 export const test = base.extend<TestOptions>({
@@ -78,6 +104,31 @@ export const test = base.extend<TestOptions>({
   },
   licensesOwners: async ({ request }, use) => {
     const response = await request.post(ApiPrefix + "/licenses/owners");
+    const { data } = await response.json();
+    await use(data);
+  },
+  modules: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/modules");
+    const { data } = await response.json();
+    await use(data);
+  },
+  permissionsList: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/permissions");
+    const { data } = await response.json();
+    await use(data);
+  },
+  policies: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/policies");
+    const { data } = await response.json();
+    await use(data);
+  },
+  policiesFrameworks: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/policies/frameworks");
+    const { data } = await response.json();
+    await use(data);
+  },
+  transactions: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/transactions");
     const { data } = await response.json();
     await use(data);
   },
