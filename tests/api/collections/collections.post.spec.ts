@@ -53,27 +53,15 @@ test.describe("List Collections @Collections", async () => {
     });
   }
 
-  const orderParams = [
+  const orderParams1 = [
     { orderBy: "id", orderDirection: "desc" },
     { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "assetCount", orderDirection: "desc" },
-    { orderBy: "assetCount", orderDirection: "asc" },
-    { orderBy: "licensesCount", orderDirection: "desc" },
-    { orderBy: "licensesCount", orderDirection: "asc" },
-    { orderBy: "raisedDisputeCount", orderDirection: "desc" },
-    { orderBy: "raisedDisputeCount", orderDirection: "asc" },
-    { orderBy: "judgedDisputeCount", orderDirection: "desc" },
-    { orderBy: "judgedDisputeCount", orderDirection: "asc" },
-    { orderBy: "resolvedDisputeCount", orderDirection: "desc" },
-    { orderBy: "resolvedDisputeCount", orderDirection: "asc" },
-    { orderBy: "cancelledDisputeCount", orderDirection: "desc" },
-    { orderBy: "cancelledDisputeCount", orderDirection: "asc" },
     { orderBy: "blockNumber", orderDirection: "desc" },
     { orderBy: "blockNumber", orderDirection: "asc" },
     { orderBy: "blockTimestamp", orderDirection: "desc" },
     { orderBy: "blockTimestamp", orderDirection: "asc" },
   ];
-  for (const { orderBy, orderDirection } of orderParams) {
+  for (const { orderBy, orderDirection } of orderParams1) {
     test(`Should return IPAssets list ordered by ${orderBy} ${orderDirection}`, async ({
       request,
     }) => {
@@ -89,10 +77,53 @@ test.describe("List Collections @Collections", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = data[i][orderBy].trim() || "\uFFFF";
+        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item <= nextItem).toBeTruthy();
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item >= nextItem).toBeTruthy();
+        }
+      }
+    });
+  }
+
+  const orderParams2 = [
+    { orderBy: "assetCount", orderDirection: "desc" },
+    { orderBy: "assetCount", orderDirection: "asc" },
+    { orderBy: "licensesCount", orderDirection: "desc" },
+    { orderBy: "licensesCount", orderDirection: "asc" },
+    { orderBy: "raisedDisputeCount", orderDirection: "desc" },
+    { orderBy: "raisedDisputeCount", orderDirection: "asc" },
+    { orderBy: "judgedDisputeCount", orderDirection: "desc" },
+    { orderBy: "judgedDisputeCount", orderDirection: "asc" },
+    { orderBy: "resolvedDisputeCount", orderDirection: "desc" },
+    { orderBy: "resolvedDisputeCount", orderDirection: "asc" },
+    { orderBy: "cancelledDisputeCount", orderDirection: "desc" },
+    { orderBy: "cancelledDisputeCount", orderDirection: "asc" },
+  ];
+  for (const { orderBy, orderDirection } of orderParams2) {
+    test(`Should return IPAssets list ordered by count ${orderBy} ${orderDirection}`, async ({
+      request,
+    }) => {
+      const payload = {
+        options: { orderBy: orderBy, orderDirection: orderDirection },
+      };
+      const response = await request.post(endpoint, {
+        data: payload,
+      });
+      expect(response.status()).toBe(200);
+
+      const { errors, data } = await response.json();
+      expect(errors).toBeUndefined();
+      expect(data.length).toBeGreaterThan(0);
+      for (let i = 0; i < data.length - 1; i++) {
+        const item = parseInt(data[i][orderBy]);
+        const nextItem = parseInt(data[i + 1][orderBy]);
+        if (orderDirection === "asc") {
+          expect(item).toBeLessThanOrEqual(nextItem);
+        } else {
+          expect(item).toBeGreaterThanOrEqual(nextItem);
         }
       }
     });
@@ -133,10 +164,12 @@ test.describe("List Collections @Collections", async () => {
       expect(data.length).toBeGreaterThan(0);
       expect(data.length).toBeLessThanOrEqual(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
+        const item = parseInt(data[i][orderBy]);
+        const nextItem = parseInt(data[i + 1][orderBy]);
         if (orderDirection === "asc") {
-          expect(data[i][orderBy] <= data[i + 1][orderBy]).toBeTruthy;
+          expect(item).toBeLessThanOrEqual(nextItem);
         } else {
-          expect(data[i][orderBy] >= data[i + 1][orderBy]).toBeTruthy;
+          expect(item).toBeGreaterThanOrEqual(nextItem);
         }
       }
     });
