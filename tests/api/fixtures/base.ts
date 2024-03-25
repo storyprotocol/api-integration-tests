@@ -69,6 +69,17 @@ type TestOptions = {
     resourceId: string;
     actionType: string;
   }>;
+  royaltiesPayments: Array<{
+    id: string;
+    payerIpId: string;
+    receiverIpId: string;
+    sender: string;
+    token: string;
+  }>;
+  royaltiesPolicies: Array<{
+    id: string;
+    splitClone: string;
+  }>;
 };
 
 export const test = base.extend<TestOptions>({
@@ -129,6 +140,16 @@ export const test = base.extend<TestOptions>({
   },
   transactions: async ({ request }, use) => {
     const response = await request.post(ApiPrefix + "/transactions");
+    const { data } = await response.json();
+    await use(data);
+  },
+  royaltiesPayments: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/royalties/payments");
+    const { data } = await response.json();
+    await use(data);
+  },
+  royaltiesPolicies: async ({ request }, use) => {
+    const response = await request.post(ApiPrefix + "/royalties/policies");
     const { data } = await response.json();
     await use(data);
   },
