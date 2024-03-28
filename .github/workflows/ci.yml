@@ -42,6 +42,10 @@ jobs:
       - name: Lint
         run: pnpm eslint .
         # Ensure you have a lint script in your package.json
+      
+      - name: Load CI env
+        run: |
+          source ci.env
 
       - name: Run Tests
         run: pnpm exec playwright test
