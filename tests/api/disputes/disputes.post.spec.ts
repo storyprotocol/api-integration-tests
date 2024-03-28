@@ -147,6 +147,7 @@ test.describe("List Disputes @Disputes", async () => {
     request,
     disputes,
   }) => {
+    const filterEmptyData = disputes.filter((d) => d.currentTag);
     const whereParams = [
       {
         where: {
@@ -163,7 +164,9 @@ test.describe("List Disputes @Disputes", async () => {
       },
       {
         where: {
-          currentTag: disputes[1].currentTag,
+          currentTag: filterEmptyData
+            ? filterEmptyData[0].currentTag
+            : disputes[0].currentTag,
         },
         exists: true,
       },
@@ -222,10 +225,10 @@ test.describe("List Disputes @Disputes", async () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.length).toBeGreaterThan(0);
-          if (where.currentTag !== "") {
-            data.forEach((item: object) => {
+          if (where.currentTag?.trim() !== "") {
+            for (const item of data) {
               expect(item).toMatchObject(where);
-            });
+            }
           }
         } else {
           expect(data.length).toBe(0);

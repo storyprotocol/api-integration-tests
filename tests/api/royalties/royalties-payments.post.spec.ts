@@ -1,10 +1,10 @@
 import { test, expect } from "../fixtures/base";
 import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/transactions";
+const endpoint = ApiPrefix + "/royalties/payments";
 
-test.describe("List Transactions @Transactions", async () => {
-  test("Should return default Transactions list", async ({ request }) => {
+test.describe("List RoyaltyPays @Royalties", () => {
+  test("Should return default Royalty Pays list", async ({ request }) => {
     const response = await request.post(endpoint);
     expect(response.status()).toBe(200);
 
@@ -13,12 +13,13 @@ test.describe("List Transactions @Transactions", async () => {
     expect(Array.isArray(data)).toBeTruthy();
     expect(data.length).toBeGreaterThan(0);
     expect(typeof data[0].id).toBe("string");
-    expect(typeof data[0].initiator).toBe("string");
-    expect(typeof data[0].ipId).toBe("string");
-    expect(typeof data[0].resourceId).toBe("string");
-    expect(typeof data[0].resourceType).toBe("string");
-    expect(typeof data[0].actionType).toBe("string");
-    expect(typeof data[0].createdAt).toBe("string");
+    expect(typeof data[0].payerIpId).toBe("string");
+    expect(typeof data[0].receiverIpId).toBe("string");
+    expect(typeof data[0].sender).toBe("string");
+    expect(typeof data[0].token).toBe("string");
+    expect(typeof data[0].amount).toBe("string");
+    expect(typeof data[0].blockNumber).toBe("string");
+    expect(typeof data[0].blockTimestamp).toBe("string");
   });
 
   const pageParams = [
@@ -27,9 +28,9 @@ test.describe("List Transactions @Transactions", async () => {
     { pagination: { offset: 2, limit: 3 } },
   ];
   for (const { pagination } of pageParams) {
-    test(`Should return Transactions list with pagination ${JSON.stringify(
+    test(`Should return Royalty Pays list with pagination ${JSON.stringify(
       pagination
-    )}`, async ({ request }) => {
+    )}`, async ({ request, royaltiesPayments }) => {
       const payload = {
         options: { pagination: pagination },
       };
@@ -47,28 +48,32 @@ test.describe("List Transactions @Transactions", async () => {
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
       expect(data.length).toBeLessThanOrEqual(pagination.limit);
-      expect(data[0]).toMatchObject(firstItem);
+      if (pagination.offset < royaltiesPayments.length) {
+        expect(data[0]).toMatchObject(firstItem);
+      }
     });
   }
 
   const orderParams = [
     { orderBy: "id", orderDirection: "desc" },
     { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "initiator", orderDirection: "desc" },
-    { orderBy: "initiator", orderDirection: "asc" },
-    { orderBy: "ipId", orderDirection: "desc" },
-    { orderBy: "ipId", orderDirection: "asc" },
-    { orderBy: "resourceId", orderDirection: "desc" },
-    { orderBy: "resourceId", orderDirection: "asc" },
-    { orderBy: "resourceType", orderDirection: "desc" },
-    { orderBy: "resourceType", orderDirection: "asc" },
-    { orderBy: "actionType", orderDirection: "desc" },
-    { orderBy: "actionType", orderDirection: "asc" },
-    { orderBy: "createdAt", orderDirection: "desc" },
-    { orderBy: "createdAt", orderDirection: "asc" },
+    { orderBy: "payerIpId", orderDirection: "desc" },
+    { orderBy: "payerIpId", orderDirection: "asc" },
+    { orderBy: "receiverIpId", orderDirection: "desc" },
+    { orderBy: "receiverIpId", orderDirection: "asc" },
+    { orderBy: "sender", orderDirection: "desc" },
+    { orderBy: "sender", orderDirection: "asc" },
+    { orderBy: "token", orderDirection: "desc" },
+    { orderBy: "token", orderDirection: "asc" },
+    { orderBy: "amount", orderDirection: "desc" },
+    { orderBy: "amount", orderDirection: "asc" },
+    { orderBy: "blockNumber", orderDirection: "desc" },
+    { orderBy: "blockNumber", orderDirection: "asc" },
+    { orderBy: "blockTimestamp", orderDirection: "desc" },
+    { orderBy: "blockTimestamp", orderDirection: "asc" },
   ];
   for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return Transactions list with order by ${orderBy} and order direction ${orderDirection} @bug`, async ({
+    test(`Should return Royalty Pays list with order by ${orderBy} and order direction ${orderDirection}`, async ({
       request,
     }) => {
       const payload = {
@@ -83,8 +88,15 @@ test.describe("List Transactions @Transactions", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+        let item: string | number;
+        let nextItem: string | number;
+        if (orderBy === "amount") {
+          item = parseInt(data[i][orderBy]);
+          nextItem = parseInt(data[i + 1][orderBy]);
+        } else {
+          item = data[i][orderBy].trim() || "\uFFFF";
+          nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+        }
         if (orderDirection === "asc") {
           expect(item <= nextItem).toBeTruthy();
         } else {
@@ -102,14 +114,17 @@ test.describe("List Transactions @Transactions", async () => {
     },
     {
       pagination: { offset: 1, limit: 3 },
-      orderBy: "ipId",
+      orderBy: "payerIpId",
       orderDirection: "desc",
     },
   ];
   for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
-    test(`Should return Transactions list with pagination ${JSON.stringify(
+    test(`Should return Royalty Pays list with pagination ${JSON.stringify(
       pagination
-    )} and order by ${orderBy} ${orderDirection}`, async ({ request }) => {
+    )}, order by ${orderBy} and order direction ${orderDirection}`, async ({
+      request,
+      royaltiesPayments,
+    }) => {
       const payload = {
         options: { pagination, orderBy, orderDirection },
       };
@@ -120,7 +135,9 @@ test.describe("List Transactions @Transactions", async () => {
 
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
+      if (pagination.offset < royaltiesPayments.length) {
+        expect(data.length).toBeGreaterThan(0);
+      }
       expect(data.length).toBeLessThanOrEqual(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
         const item = data[i][orderBy].trim() || "\uFFFF";
@@ -134,45 +151,45 @@ test.describe("List Transactions @Transactions", async () => {
     });
   }
 
-  test("Should return Transactions list with filter", async ({
+  test("Should return Royalty Pays list with filter", async ({
     request,
-    transactions,
+    royaltiesPayments,
   }) => {
-    const filterEmptyData = transactions.filter((t) => t.ipId);
     const whereParams = [
+      { where: { payerIpId: royaltiesPayments[0].payerIpId }, exists: true },
+      {
+        where: { payerIpId: "0x80ad6a261618b4fe3c2385f57e1ad7e614629999" },
+        exists: false,
+      },
+      {
+        where: { receiverIpId: royaltiesPayments[0].receiverIpId },
+        exists: true,
+      },
+      {
+        where: { receiverIpId: "0x80ad6a261618b4fe3c2385f57e1ad7e614629999" },
+        exists: false,
+      },
+      { where: { sender: royaltiesPayments[0].sender }, exists: true },
+      {
+        where: { sender: "0xf398c12a45bc409b6c652e25bb0a3e7024929999" },
+        exists: false,
+      },
+      { where: { token: royaltiesPayments[0].token }, exists: true },
+      {
+        where: { token: "0x857308523a01b430cb112400976b9fc4a6429999" },
+        exists: false,
+      },
       {
         where: {
-          ipId: filterEmptyData
-            ? filterEmptyData[0].ipId
-            : transactions[0].ipId,
+          payerIpId: royaltiesPayments[0].payerIpId,
+          token: royaltiesPayments[0].token,
         },
         exists: true,
       },
       {
-        where: { ipId: "0x6465a15fc665329d7b129987f1fc4f824c579999" },
-        exists: false,
-      },
-      { where: { resourceId: transactions[0].resourceId }, exists: true },
-      {
-        where: { resourceId: "0x292639452a975630802c17c9267169d93bd59999" },
-        exists: false,
-      },
-      { where: { actionType: transactions[1].actionType }, exists: true },
-      {
         where: {
-          ipId: filterEmptyData
-            ? filterEmptyData[0].ipId
-            : transactions[0].ipId,
-          actionType: filterEmptyData
-            ? filterEmptyData[0].actionType
-            : transactions[0].actionType,
-        },
-        exists: true,
-      },
-      {
-        where: {
-          resourceId: transactions[0].resourceId,
-          actionType: transactions[0].actionType,
+          receiverIpId: royaltiesPayments[0].receiverIpId,
+          sender: royaltiesPayments[0].sender,
         },
         exists: true,
       },
@@ -191,10 +208,8 @@ test.describe("List Transactions @Transactions", async () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.length).toBeGreaterThan(0);
-          if (where.ipId?.trim() !== "") {
-            for (const item of data) {
-              expect(item).toMatchObject(where);
-            }
+          for (const item of data) {
+            expect(item).toMatchObject(where);
           }
         } else {
           expect(data.length).toBe(0);
@@ -203,25 +218,25 @@ test.describe("List Transactions @Transactions", async () => {
     }
   });
 
-  test("Should return Transactions list with filter, order and pagination", async ({
+  test("Should return Royalty Pays list with filter, order and pagination", async ({
     request,
-    transactions,
+    royaltiesPayments,
   }) => {
     const params = [
       {
-        where: { actionType: transactions[1].actionType },
+        pagination: { offset: 0, limit: 5 },
         orderBy: "id",
         orderDirection: "asc",
-        pagination: { offset: 1, limit: 5 },
+        where: { payerIpId: royaltiesPayments[0].payerIpId },
       },
       {
-        where: {
-          actionType: transactions[1].actionType,
-          resourceId: transactions[0].resourceId,
-        },
-        orderBy: "ipId",
+        pagination: { offset: 1, limit: 3 },
+        orderBy: "payerIpId",
         orderDirection: "desc",
-        pagination: { offset: 0, limit: 4 },
+        where: {
+          payerIpId: royaltiesPayments[0].payerIpId,
+          token: royaltiesPayments[0].token,
+        },
       },
     ];
     for (const p of params) {
@@ -236,7 +251,9 @@ test.describe("List Transactions @Transactions", async () => {
 
         const { errors, data } = await response.json();
         expect(errors).toBeUndefined();
-        expect(data.length).toBeGreaterThan(0);
+        if (p.pagination.offset < royaltiesPayments.length) {
+          expect(data.length).toBeGreaterThan(0);
+        }
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
         for (let i = 0; i < data.length - 1; i++) {
           const item = data[i][p.orderBy].trim() || "\uFFFF";
@@ -247,6 +264,9 @@ test.describe("List Transactions @Transactions", async () => {
             expect(item >= nextItem).toBeTruthy();
           }
         }
+        data.forEach((item: object) => {
+          expect(item).toMatchObject(p.where);
+        });
       });
     }
   });
