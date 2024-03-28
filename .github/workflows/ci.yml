@@ -1,0 +1,55 @@
+name: CI Workflow for API Integration Testing
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # Add  timestamp
+  print_timestamp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate timestamp
+        run: |
+          echo "TIMESTAMP=$(TZ='America/Los_Angeles' date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
+
+      - name: Print timestamp
+        run: |
+          echo "Execution time (Pacific Time Zone) $TIMESTAMP"
+
+  test-and-publish:
+    needs: print_timestamp
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      - name: Install Dependencies
+        run: pnpm install
+
+      - name: Lint
+        run: pnpm eslint .
+        # Ensure you have a lint script in your package.json
+
+      - name: Run Tests
+        run: pnpm exec playwright test
+        # Ensure you have a test:integration script in your package.json for your API integration tests
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v2
+        if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: test-results
+          path: ./playwright-report/index.html
