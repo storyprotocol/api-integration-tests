@@ -4,7 +4,7 @@ import { ApiPrefix } from "../../constants";
 const endpoint = ApiPrefix + "/permissions";
 
 test.describe("Get a Permission @Permissions", async () => {
-  test("Should return Permissions detail", async ({
+  test("Should return Permissions detail @bug", async ({
     request,
     permissionsList,
   }) => {
