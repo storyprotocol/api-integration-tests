@@ -30,7 +30,7 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
   for (const { pagination } of pageParams) {
     test(`Should return IPAPolicies list with pagination ${JSON.stringify(
       pagination
-    )} @bug`, async ({ request }) => {
+    )}`, async ({ request }) => {
       const payload = {
         options: { pagination: pagination },
       };
@@ -71,7 +71,7 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
     { orderBy: "blockTimestamp", orderDirection: "asc" },
   ];
   for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return IPAPolicies list ordered by ${orderBy} ${orderDirection} @bug`, async ({
+    test(`Should return IPAPolicies list ordered by ${orderBy} ${orderDirection}`, async ({
       request,
     }) => {
       const payload = {
@@ -86,8 +86,14 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+        const item =
+          typeof data[i][orderBy] === "string"
+            ? data[i][orderBy].trim() || "\uFFFF"
+            : data[i][orderBy];
+        const nextItem =
+          typeof data[i + 1][orderBy] === "string"
+            ? data[i + 1][orderBy].trim() || "\uFFFF"
+            : data[i + 1][orderBy];
         if (orderDirection === "asc") {
           expect(item <= nextItem).toBeTruthy();
         } else {
@@ -112,9 +118,7 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
   for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
     test(`Should return IPAPolicies list with pagination ${JSON.stringify(
       pagination
-    )} and ordered by ${orderBy} ${orderDirection} @bug`, async ({
-      request,
-    }) => {
+    )} and ordered by ${orderBy} ${orderDirection}`, async ({ request }) => {
       const payload = {
         options: {
           pagination: pagination,
@@ -213,7 +217,7 @@ test.describe("List IPAPolicies @IPAPolicies", async () => {
     }
   });
 
-  test("Should return IPAPolicies list with pagination, orders and filters", async ({
+  test("Should return IPAPolicies list with pagination, orders and filters @bug", async ({
     request,
     ipapolicies,
   }) => {
