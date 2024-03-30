@@ -70,7 +70,7 @@ jobs:
                   },
                   "image_url": "http://www.quickmeme.com/img/b9/b9848df257b95cd39585368475a4b4e4a3a8c774f7390226daecb79b912087ad.jpg",
                   "alt_text": "Playwright Test Results"
-                }
+                },
                 {
                   "type": "section",
                   "text": {
