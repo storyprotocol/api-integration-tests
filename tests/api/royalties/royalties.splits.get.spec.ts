@@ -4,7 +4,7 @@ import { ApiPrefix } from "../../constants";
 const endpoint = ApiPrefix + "/royalties/splits";
 
 test.describe("Get a Royalties Split @Royalties", () => {
-  test("Should return Royalties Split detail", async ({
+  test("Should return Royalties Split detail @bug", async ({
     request,
     royaltiesPolicies,
   }) => {

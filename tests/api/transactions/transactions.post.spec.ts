@@ -216,7 +216,7 @@ test.describe("List Transactions @Transactions", async () => {
       },
       {
         where: {
-          actionType: transactions[1].actionType,
+          actionType: transactions[0].actionType,
           resourceId: transactions[0].resourceId,
         },
         orderBy: "ipId",
