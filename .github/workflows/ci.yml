@@ -44,14 +44,25 @@ jobs:
         run: pnpm eslint .
         # Ensure you have a lint script in your package.json
 
-      - name: Run Tests
+      - name: Run Tests On Seplia
         continue-on-error: true
         run: |
           echo "Load environment variables" 
-          export API_BASE_URL=${{ secrets.API_BASE_URL }}
-          export API_PREFIX=${{ secrets.API_PREFIX }}
-          export API_KEY=${{ secrets.API_KEY }} 
-          pnpm exec playwright test
+          touch .env.sepolia
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.sepolia
+          echo API_PREFIX=${{ secrets.API_PREFIX_SEPOLIA }} >> .env.sepolia
+          echo API_KEY=${{ secrets.API_KEY }} >> .env.sepolia
+          test_env=sepolia npx playwright test
+      
+      - name: Run Tests On Renaissance
+        continue-on-error: true
+        run: |
+          echo "Load environment variables" 
+          touch .env.renaissance
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.renaissance
+          echo API_PREFIX=${{ secrets.API_PREFIX_RENAISSANCE }} >> .env.renaissance
+          echo API_KEY=${{ secrets.API_KEY }} >> .env.renaissance
+          test_env=renaissance npx playwright test
 
       - name: Push Slack Notification
         uses: slackapi/slack-github-action@v1.25.0
@@ -88,4 +99,4 @@ jobs:
         # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           name: test-results
-          path: ./playwright-report/index.html
+          path: ./playwright-report-*/index.html
