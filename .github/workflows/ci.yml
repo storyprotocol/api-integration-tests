@@ -44,7 +44,7 @@ jobs:
         run: pnpm eslint .
         # Ensure you have a lint script in your package.json
       
-      - name: Run Tests
+      - name: Run Tests On Seplia
         continue-on-error: true
         run: |
           echo "Load environment variables" 
@@ -52,11 +52,16 @@ jobs:
           echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.sepolia
           echo API_PREFIX=${{ secrets.API_PREFIX_SEPOLIA }} >> .env.sepolia
           echo API_KEY=${{ secrets.API_KEY }} >> .env.sepolia
+          test_env=sepolia npx playwright test
+      
+      - name: Run Tests On Renaissance
+        continue-on-error: true
+        run: |
+          echo "Load environment variables" 
           touch .env.renaissance
           echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.renaissance
           echo API_PREFIX=${{ secrets.API_PREFIX_RENNAISSANCE }} >> .env.renaissance
           echo API_KEY=${{ secrets.API_KEY }} >> .env.renaissance
-          test_env=sepolia npx playwright test
           test_env=renaissance npx playwright test
 
       - name: Upload Test Results
