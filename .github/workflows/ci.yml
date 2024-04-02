@@ -48,8 +48,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "Load environment variables" 
-          touch .env.sepolia
-          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.sepolia
+          rm .env.sepolia && touch .env.sepolia
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} > .env.sepolia
           echo API_PREFIX=${{ secrets.API_PREFIX_SEPOLIA }} >> .env.sepolia
           echo API_KEY=${{ secrets.API_KEY }} >> .env.sepolia
           test_env=sepolia npx playwright test
@@ -58,8 +58,8 @@ jobs:
         continue-on-error: true
         run: |
           echo "Load environment variables" 
-          touch .env.renaissance
-          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.renaissance
+          rm .env.renaissance && touch .env.renaissance
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} > .env.renaissance
           echo API_PREFIX=${{ secrets.API_PREFIX_RENAISSANCE }} >> .env.renaissance
           echo API_KEY=${{ secrets.API_KEY }} >> .env.renaissance
           test_env=renaissance npx playwright test
@@ -95,8 +95,17 @@ jobs:
           SLACK_BOT_TOKEN: ${{ secrets.SLACK_BOT_TOKEN }}
 
       - name: Upload Test Results
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
-          name: test-results
-          path: ./playwright-report-*/index.html
+          name: sepolia-test-reports
+          path: |
+            ./playwright-report-sepolia/index.html
+
+      - name: Upload Test Results
+        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
+        # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
+        with:
+          name: renaissance-test-reports
+          path: |
+            ./playwright-report-renaissance/index.html
