@@ -60,7 +60,7 @@ jobs:
           echo "Load environment variables" 
           touch .env.renaissance
           echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.renaissance
-          echo API_PREFIX=${{ secrets.API_PREFIX_RENNAISSANCE }} >> .env.renaissance
+          echo API_PREFIX=${{ secrets.API_PREFIX_RENAISSANCE }} >> .env.renaissance
           echo API_KEY=${{ secrets.API_KEY }} >> .env.renaissance
           test_env=renaissance npx playwright test
 
