@@ -48,14 +48,20 @@ jobs:
         continue-on-error: true
         run: |
           echo "Load environment variables" 
-          export API_BASE_URL=${{ secrets.API_BASE_URL }}
-          export API_PREFIX=${{ secrets.API_PREFIX }}
-          export API_KEY=${{ secrets.API_KEY }} 
-          pnpm exec playwright test
+          touch .env.sepolia
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.sepolia
+          echo API_PREFIX=${{ secrets.API_PREFIX_SEPOLIA }} >> .env.sepolia
+          echo API_KEY=${{ secrets.API_KEY }} >> .env.sepolia
+          touch .env.renaissance
+          echo API_BASE_URL=${{ secrets.API_BASE_URL }} >> .env.renaissance
+          echo API_PREFIX=${{ secrets.API_PREFIX_RENNAISSANCE }} >> .env.renaissance
+          echo API_KEY=${{ secrets.API_KEY }} >> .env.renaissance
+          test_env=sepolia npx playwright test
+          test_env=renaissance npx playwright test
 
       - name: Upload Test Results
         uses: actions/upload-artifact@v2
         # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
         with:
           name: test-results
-          path: ./playwright-report/index.html
+          path: ./playwright-report-*/index.html

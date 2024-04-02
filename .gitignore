@@ -4,3 +4,7 @@ node_modules/
 /blob-report/
 /playwright/.cache/
 .env
+.env.renaissance
+.env.sepolia
+/playwright-report-renaissance/
+/playwright-report-sepolia/
