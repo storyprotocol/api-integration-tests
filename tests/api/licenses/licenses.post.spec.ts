@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/licenses";
+const endpoint = "./licenses";
 
 test.describe("List Licenses @Licenses", async () => {
   test("Should return default Licenses list", async ({ request }) => {
@@ -13,12 +12,16 @@ test.describe("List Licenses @Licenses", async () => {
     expect(Array.isArray(data)).toBeTruthy();
     expect(data.length).toBeGreaterThan(0);
     expect(typeof data[0].id).toBe("string");
-    expect(typeof data[0].policyId).toBe("string");
+    expect(typeof data[0].licenseTermsId).toBe("string");
     expect(typeof data[0].licensorIpId).toBe("string");
-    expect(typeof data[0].amount).toBe("string");
+    expect(typeof data[0].licenseTemplate).toBe("string");
     expect(typeof data[0].transferable).toBe("boolean");
+    expect(typeof data[0].owner).toBe("string");
+    expect(typeof data[0].mintedAt).toBe("string");
+    expect(typeof data[0].expiresAt).toBe("string");
+    expect(typeof data[0].burntAt).toBe("string");
     expect(typeof data[0].blockNumber).toBe("string");
-    expect(typeof data[0].blockTimestamp).toBe("string");
+    expect(typeof data[0].blockTime).toBe("string");
   });
 
   const pageParams = [
@@ -54,8 +57,8 @@ test.describe("List Licenses @Licenses", async () => {
   const orderParams = [
     { orderBy: "id", orderDirection: "desc" },
     { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "policyId", orderDirection: "desc" },
-    { orderBy: "policyId", orderDirection: "asc" },
+    { orderBy: "licenseTermsId", orderDirection: "desc" },
+    { orderBy: "licenseTermsId", orderDirection: "asc" },
     { orderBy: "licensorIpId", orderDirection: "desc" },
     { orderBy: "licensorIpId", orderDirection: "asc" },
     { orderBy: "amount", orderDirection: "desc" },
@@ -64,8 +67,8 @@ test.describe("List Licenses @Licenses", async () => {
     { orderBy: "transferable", orderDirection: "asc" },
     { orderBy: "blockNumber", orderDirection: "desc" },
     { orderBy: "blockNumber", orderDirection: "asc" },
-    { orderBy: "blockTimestamp", orderDirection: "desc" },
-    { orderBy: "blockTimestamp", orderDirection: "asc" },
+    { orderBy: "blockTime", orderDirection: "desc" },
+    { orderBy: "blockTime", orderDirection: "asc" },
   ];
   for (const { orderBy, orderDirection } of orderParams) {
     test(`Should return Licenses list ordered by ${orderBy} ${orderDirection}`, async ({
@@ -107,7 +110,7 @@ test.describe("List Licenses @Licenses", async () => {
   const pageAndOrderParams = [
     {
       pagination: { offset: 0, limit: 5 },
-      orderBy: "policyId",
+      orderBy: "licenseTermsId",
       orderDirection: "desc",
     },
     {
@@ -160,8 +163,8 @@ test.describe("List Licenses @Licenses", async () => {
         where: { licensorIpId: "0x4f4eda51d35f19a8372bf3894fdc2dbeff73d999" },
         exists: false,
       },
-      { where: { policyId: licenses[2].policyId }, exists: true },
-      { where: { policyId: "0" }, exists: false },
+      { where: { licenseTermsId: licenses[2].licenseTermsId }, exists: true },
+      { where: { licenseTermsId: "0" }, exists: false },
       { where: { transferable: true }, exists: true },
       { where: { transferable: false }, exists: true },
     ];
@@ -196,9 +199,9 @@ test.describe("List Licenses @Licenses", async () => {
     const params = [
       {
         pagination: { offset: 0, limit: 4 },
-        orderBy: "policyId",
+        orderBy: "licenseTermsId",
         orderDirection: "asc",
-        where: { policyId: licenses[0].policyId, transferable: true },
+        where: { licenseTermsId: licenses[0].licenseTermsId, transferable: true },
       },
       {
         pagination: { offset: 0, limit: 3 },
@@ -206,7 +209,7 @@ test.describe("List Licenses @Licenses", async () => {
         orderDirection: "desc",
         where: {
           licensorIpId: licenses[1].licensorIpId,
-          policyId: licenses[1].policyId,
+          licenseTermsId: licenses[1].licenseTermsId,
         },
       },
     ];

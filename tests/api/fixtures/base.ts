@@ -1,5 +1,4 @@
 import { test as base } from "@playwright/test";
-import { ApiPrefix } from "../../constants";
 
 type TestOptions = {
   assets: Array<{
@@ -8,6 +7,9 @@ type TestOptions = {
     tokenId: string;
     metadataResolverAddress: string;
     tokenContract: string;
+    metadata: {
+      registrant: string;
+    }
   }>;
   disputes: Array<{
     id: string;
@@ -28,7 +30,7 @@ type TestOptions = {
   }>;
   licenses: Array<{
     id: string;
-    policyId: string;
+    licenseTermsId: string;
     licensorIpId: string;
     transferable: boolean;
   }>;
@@ -84,72 +86,72 @@ type TestOptions = {
 
 export const test = base.extend<TestOptions>({
   assets: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/assets");
+    const response = await request.post("./assets");
     const { data } = await response.json();
     await use(data);
   },
   disputes: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/disputes");
+    const response = await request.post("./disputes");
     const { data } = await response.json();
     await use(data);
   },
   collections: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/collections");
+    const response = await request.post("./collections");
     const { data } = await response.json();
     await use(data);
   },
   ipapolicies: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/ipapolicies");
+    const response = await request.post("./ipapolicies");
     const { data } = await response.json();
     await use(data);
   },
   licenses: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/licenses");
+    const response = await request.post("./licenses");
     const { data } = await response.json();
     await use(data);
   },
   licensesMintingfees: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/licenses/mintingfees");
+    const response = await request.post("./licenses/mintingfees");
     const { data } = await response.json();
     await use(data);
   },
   licensesOwners: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/licenses/owners");
+    const response = await request.post("./licenses/owners");
     const { data } = await response.json();
     await use(data);
   },
   modules: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/modules");
+    const response = await request.post("./modules");
     const { data } = await response.json();
     await use(data);
   },
   permissionsList: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/permissions");
+    const response = await request.post("./permissions");
     const { data } = await response.json();
     await use(data);
   },
   policies: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/policies");
+    const response = await request.post("./policies");
     const { data } = await response.json();
     await use(data);
   },
   policiesFrameworks: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/policies/frameworks");
+    const response = await request.post("./policies/frameworks");
     const { data } = await response.json();
     await use(data);
   },
   transactions: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/transactions");
+    const response = await request.post("./transactions");
     const { data } = await response.json();
     await use(data);
   },
   royaltiesPayments: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/royalties/payments");
+    const response = await request.post("./royalties/payments");
     const { data } = await response.json();
     await use(data);
   },
   royaltiesPolicies: async ({ request }, use) => {
-    const response = await request.post(ApiPrefix + "/royalties/policies");
+    const response = await request.post("./royalties/policies");
     const { data } = await response.json();
     await use(data);
   },

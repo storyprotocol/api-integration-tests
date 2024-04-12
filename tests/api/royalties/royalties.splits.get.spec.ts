@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/royalties/splits";
+const endpoint = "./royalties/splits";
 
 test.describe("Get a Royalties Split @Royalties", () => {
   test("Should return Royalties Split detail @bug", async ({

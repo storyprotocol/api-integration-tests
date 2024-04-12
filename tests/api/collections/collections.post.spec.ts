@@ -1,7 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/collections";
+const endpoint = "./collections";
 
 test.describe("List Collections @Collections", async () => {
   test("Should return default Collections list", async ({ request }) => {

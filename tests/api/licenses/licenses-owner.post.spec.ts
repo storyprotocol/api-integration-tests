@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/licenses/owners";
+const endpoint = "./licenses/owners";
 
 test.describe("List License Owners @Licenses Owners", async () => {
   test("Should return default License Owners list", async ({ request }) => {

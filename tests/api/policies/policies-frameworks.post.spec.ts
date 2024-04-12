@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/policies/frameworks";
+const endpoint = "./policies/frameworks";
 
 test.describe("List Policies Frameworks @Policies", async () => {
   test("Should return default Policies Frameworks list", async ({
