@@ -7,7 +7,7 @@ import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const EnvName = process.env.test_env || '';
+const EnvName = process.env.test_env || 'story';
 
 /**
  * See https://playwright.dev/docs/test-configuration.
@@ -15,7 +15,6 @@ const EnvName = process.env.test_env || '';
 export default defineConfig({
   testDir: './tests',
   /* Run tests in files in parallel */
-  globalSetup: require.resolve('./global-setup'),
   fullyParallel: true,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
@@ -49,6 +48,7 @@ export default defineConfig({
           // Add authorization token to all requests.
           // Assuming personal access token available in the environment.
           'X-API-Key': process.env.API_KEY || '',
+          'X-CHAIN': `${EnvName}`,
         },
       }
     },

@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/assets";
+const endpoint = "./assets";
 
 test.describe("List IPAssets @IPAssets", async () => {
   test("Should return default IPAssets list", async ({ request }) => {
@@ -90,8 +89,12 @@ test.describe("List IPAssets @IPAssets", async () => {
       expect(errors).toBeUndefined();
       expect(data.length).toBeGreaterThan(0);
       for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+        let item = data[i][orderBy].trim() || "\uFFFF";
+        let nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+        if(orderBy === "tokenId"){
+          item = parseInt(data[i][orderBy]);
+          nextItem = parseInt(data[i + 1][orderBy]);
+        }
         if (orderDirection === "asc") {
           expect(item <= nextItem).toBeTruthy();
         } else {

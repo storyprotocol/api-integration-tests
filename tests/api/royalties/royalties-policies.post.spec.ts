@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/royalties/policies";
+const endpoint = "./royalties/policies";
 
 test.describe("List RoyaltyPolicies @Royalties", () => {
   test("Should return default Royalty Policies list", async ({ request }) => {
@@ -14,7 +13,7 @@ test.describe("List RoyaltyPolicies @Royalties", () => {
     expect(data.length).toBeGreaterThan(0);
     expect(typeof data[0].id).toBe("string");
     expect(typeof data[0].royaltyStack).toBe("string");
-    expect(typeof data[0].splitClone).toBe("string");
+    expect(typeof data[0].ipRoyaltyVault).toBe("string");
     expect(typeof data[0].ancestorsVault).toBe("string");
     expect(Array.isArray(data[0].targetAncestors)).toBeTruthy();
     expect(Array.isArray(data[0].targetRoyaltyAmount)).toBeTruthy();
@@ -57,8 +56,8 @@ test.describe("List RoyaltyPolicies @Royalties", () => {
     { orderBy: "id", orderDirection: "asc" },
     { orderBy: "royaltyStack", orderDirection: "desc" },
     { orderBy: "royaltyStack", orderDirection: "asc" },
-    { orderBy: "splitClone", orderDirection: "desc" },
-    { orderBy: "splitClone", orderDirection: "asc" },
+    { orderBy: "ipRoyaltyVault", orderDirection: "desc" },
+    { orderBy: "ipRoyaltyVault", orderDirection: "asc" },
     { orderBy: "ancestorsVault", orderDirection: "desc" },
     { orderBy: "ancestorsVault", orderDirection: "asc" },
     { orderBy: "blockNumber", orderDirection: "desc" },

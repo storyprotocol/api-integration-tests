@@ -1,7 +1,6 @@
 import { test, expect } from "../fixtures/base";
-import { ApiPrefix } from "../../constants";
 
-const endpoint = ApiPrefix + "/royalties/policies";
+const endpoint = "./royalties/policies";
 
 test.describe("Get a Royalties Policy @Royalties", () => {
   test("Should return Royalties Policy detail", async ({
@@ -25,7 +24,7 @@ test.describe("Get a Royalties Policy @Royalties", () => {
         if (exists) {
           expect(data.id).toBe(royaltyPolicyId);
           expect(typeof data.royaltyStack).toBe("string");
-          expect(typeof data.splitClone).toBe("string");
+          expect(typeof data.ipRoyaltyVault).toBe("string");
           expect(typeof data.ancestorsVault).toBe("string");
           expect(Array.isArray(data.targetAncestors)).toBeTruthy();
           expect(Array.isArray(data.targetRoyaltyAmount)).toBeTruthy();
