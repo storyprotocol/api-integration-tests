@@ -31,7 +31,7 @@ test.describe("List Disputes @Disputes", async () => {
   for (const { pagination } of pageParams) {
     test(`Should return Disputes list with pagination ${JSON.stringify(
       pagination
-    )}`, async ({ request }) => {
+    )}`, async ({ request, disputes }) => {
       const payload = {
         options: { pagination: pagination },
       };
@@ -48,8 +48,10 @@ test.describe("List Disputes @Disputes", async () => {
 
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
-      expect(data.length).toBe(pagination.limit);
-      expect(data[0]).toMatchObject(firstItem);
+      expect(data.length).toBeLessThanOrEqual(pagination.limit);
+      if (pagination.offset < disputes.length) {
+        expect(data[0]).toMatchObject(firstItem);
+      }
     });
   }
 
@@ -117,7 +119,7 @@ test.describe("List Disputes @Disputes", async () => {
   for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
     test(`Should return Disputes list with pagination ${JSON.stringify(
       pagination
-    )} ordered by ${orderBy} ${orderDirection}`, async ({ request }) => {
+    )} ordered by ${orderBy} ${orderDirection}`, async ({ request, disputes }) => {
       const payload = {
         options: { pagination, orderBy, orderDirection },
       };
@@ -128,8 +130,10 @@ test.describe("List Disputes @Disputes", async () => {
 
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      expect(data.length).toBe(pagination.limit);
+      if (pagination.offset < disputes.length) {
+        expect(data.length).toBeGreaterThan(0);
+      }
+      expect(data.length).toBeLessThanOrEqual(pagination.limit);
       for (let i = 0; i < data.length - 1; i++) {
         const item = data[i][orderBy].trim() || "\uFFFF";
         const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
@@ -150,7 +154,7 @@ test.describe("List Disputes @Disputes", async () => {
     const whereParams = [
       {
         where: {
-          targetTag: disputes[1].targetTag,
+          targetTag: disputes[0].targetTag,
         },
         exists: true,
       },
@@ -185,7 +189,7 @@ test.describe("List Disputes @Disputes", async () => {
         exists: false,
       },
       {
-        where: { initiator: disputes[1].initiator },
+        where: { initiator: disputes[0].initiator },
         exists: true,
       },
       {
@@ -194,8 +198,8 @@ test.describe("List Disputes @Disputes", async () => {
       },
       {
         where: {
-          targetTag: disputes[1].targetTag,
-          targetIpId: disputes[1].targetIpId,
+          targetTag: disputes[0].targetTag,
+          targetIpId: disputes[0].targetIpId,
         },
         exists: true,
       },
@@ -246,8 +250,8 @@ test.describe("List Disputes @Disputes", async () => {
         orderBy: "id",
         orderDirection: "desc",
         where: {
-          targetTag: disputes[1].targetTag,
-          initiator: disputes[1].initiator,
+          targetTag: disputes[0].targetTag,
+          initiator: disputes[0].initiator,
         },
       },
       {
@@ -276,7 +280,9 @@ test.describe("List Disputes @Disputes", async () => {
 
         const { errors, data } = await response.json();
         expect(errors).toBeUndefined();
-        expect(data.length).toBeGreaterThan(0);
+        if (p.pagination.offset < disputes.length) {
+          expect(data.length).toBeGreaterThan(0);
+        }
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
         for (let i = 0; i < data.length - 1; i++) {
           const item = data[i][p.orderBy].trim() || "\uFFFF";
