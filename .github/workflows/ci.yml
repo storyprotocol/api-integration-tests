@@ -10,20 +10,12 @@ on:
   workflow_dispatch:
 
 jobs:
-  # Add  timestamp
-  print_timestamp:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Generate timestamp
-        run: |
-          echo "TIMESTAMP=$(TZ='America/Los_Angeles' date +'%Y-%m-%d %H:%M:%S')" >> $GITHUB_ENV
 
-      - name: Print timestamp
-        run: |
-          echo "Execution time (Pacific Time Zone) $TIMESTAMP"
+  Timestamp:
+    uses: storyprotocol/gha-workflows/.github/workflows/reusable-timestamp.yml@main
 
   test-and-publish:
-    needs: print_timestamp
+    needs: [ Timestamp ]
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -53,15 +45,6 @@ jobs:
           echo API_KEY=${{ secrets.API_KEY }} >> .env
           test_env=sepolia npx playwright test
       
-      - name: Run Tests On Story
-        continue-on-error: true
-        run: |
-          echo "Load environment variables" 
-          rm .env && touch .env
-          echo API_BASE_URL=${{ secrets.API_BASE_URL }} > .env
-          echo API_KEY=${{ secrets.API_KEY }} >> .env
-          test_env=story npx playwright test
-
       - name: Push Slack Notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
@@ -99,11 +82,3 @@ jobs:
           name: sepolia-test-reports
           path: |
             ./playwright-report-sepolia/index.html
-
-      - name: Upload Test Results
-        uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
-        # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
-        with:
-          name: story-test-reports
-          path: |
-            ./playwright-report-story/index.html
