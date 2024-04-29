@@ -27,8 +27,16 @@ test.describe("Get a RoyaltyPay @Royalties", () => {
           expect(typeof data.amount).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.payerIpId).toBeTruthy();
+          expect(data.receiverIpId).toBeTruthy();
+          expect(data.sender).toBeTruthy();
+          expect(data.token).toBeTruthy();
+          expect(data.amount).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

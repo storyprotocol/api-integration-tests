@@ -3,12 +3,10 @@ import { test as base } from "@playwright/test";
 type TestOptions = {
   assets: Array<{
     id: string;
-    chainId: string;
-    tokenId: string;
-    metadataResolverAddress: string;
-    tokenContract: string;
-    metadata: {
-      registrant: string;
+    nftMetadata: {
+      chainId: string;
+      tokenId: string;
+      tokenContract: string;
     }
   }>;
   disputes: Array<{
@@ -21,29 +19,11 @@ type TestOptions = {
   collections: Array<{
     id: string;
   }>;
-  ipapolicies: Array<{
-    id: string;
-    ipId: string;
-    policyId: string;
-    active: boolean;
-    inherited: boolean;
-  }>;
-  licenses: Array<{
-    id: string;
-    licenseTermsId: string;
-    licensorIpId: string;
-    transferable: boolean;
-  }>;
   licensesMintingfees: Array<{
     id: string;
     token: string;
     payer: string;
     receiverIpId: string;
-  }>;
-  licensesOwners: Array<{
-    id: string;
-    owner: string;
-    policyId: string;
   }>;
   modules: Array<{
     id: string;
@@ -53,17 +33,6 @@ type TestOptions = {
     id: string;
     signer: string;
     to: string;
-  }>;
-  policies: Array<{
-    id: string;
-    mintingFeeToken: string;
-    policyFrameworkManager: string;
-    royaltyPolicy: boolean;
-  }>;
-  policiesFrameworks: Array<{
-    id: string;
-    name: string;
-    address: string;
   }>;
   transactions: Array<{
     id: string;
@@ -80,7 +49,20 @@ type TestOptions = {
   }>;
   royaltiesPolicies: Array<{
     id: string;
-    splitClone: string;
+  }>;
+  licensesTemplates: Array<{
+    id: string;
+    name: string;
+  }>;
+  licensesTerms: Array<{
+    id: string;
+    licenseTemplate: string;
+  }>;
+  licensesIpTerms: Array<{
+    id: string;
+  }>;
+  licensesTokens: Array<{
+    id: string;
   }>;
 };
 
@@ -100,23 +82,8 @@ export const test = base.extend<TestOptions>({
     const { data } = await response.json();
     await use(data);
   },
-  ipapolicies: async ({ request }, use) => {
-    const response = await request.post("./ipapolicies");
-    const { data } = await response.json();
-    await use(data);
-  },
-  licenses: async ({ request }, use) => {
-    const response = await request.post("./licenses");
-    const { data } = await response.json();
-    await use(data);
-  },
   licensesMintingfees: async ({ request }, use) => {
     const response = await request.post("./licenses/mintingfees");
-    const { data } = await response.json();
-    await use(data);
-  },
-  licensesOwners: async ({ request }, use) => {
-    const response = await request.post("./licenses/owners");
     const { data } = await response.json();
     await use(data);
   },
@@ -127,16 +94,6 @@ export const test = base.extend<TestOptions>({
   },
   permissionsList: async ({ request }, use) => {
     const response = await request.post("./permissions");
-    const { data } = await response.json();
-    await use(data);
-  },
-  policies: async ({ request }, use) => {
-    const response = await request.post("./policies");
-    const { data } = await response.json();
-    await use(data);
-  },
-  policiesFrameworks: async ({ request }, use) => {
-    const response = await request.post("./policies/frameworks");
     const { data } = await response.json();
     await use(data);
   },
@@ -155,5 +112,25 @@ export const test = base.extend<TestOptions>({
     const { data } = await response.json();
     await use(data);
   },
+  licensesTemplates: async ({ request }, use) => {
+    const response = await request.post("./licenses/templates");
+    const { data } = await response.json();
+    await use(data);
+  },
+  licensesTerms: async ({ request }, use) => {
+    const response = await request.post("./licenses/terms");
+    const { data } = await response.json();
+    await use(data);
+  },
+  licensesIpTerms: async ({ request }, use) => {
+    const response = await request.post("./licenses/ip/terms");
+    const { data } = await response.json();
+    await use(data);
+  },
+  licensesTokens: async ({ request }, use) => {
+    const response = await request.post("./licenses/tokens");
+    const { data } = await response.json();
+    await use(data);
+  }
 });
 export { expect } from "@playwright/test";

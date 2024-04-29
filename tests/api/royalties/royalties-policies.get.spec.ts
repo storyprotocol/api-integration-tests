@@ -25,13 +25,17 @@ test.describe("Get a Royalties Policy @Royalties", () => {
           expect(data.id).toBe(royaltyPolicyId);
           expect(typeof data.royaltyStack).toBe("string");
           expect(typeof data.ipRoyaltyVault).toBe("string");
-          expect(typeof data.ancestorsVault).toBe("string");
-          expect(Array.isArray(data.targetAncestors)).toBeTruthy();
-          expect(Array.isArray(data.targetRoyaltyAmount)).toBeTruthy();
+          expect(Array.isArray(data.targetAncestors ?? [])).toBeTruthy();
+          expect(Array.isArray(data.targetRoyaltyAmount ?? [])).toBeTruthy();
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.royaltyStack).toBeTruthy();
+          expect(data.ipRoyaltyVault).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

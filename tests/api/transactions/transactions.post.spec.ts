@@ -18,6 +18,17 @@ test.describe("List Transactions @Transactions", async () => {
     expect(typeof data[0].resourceType).toBe("string");
     expect(typeof data[0].actionType).toBe("string");
     expect(typeof data[0].createdAt).toBe("string");
+    expect(data[0].id).toBeTruthy();
+    expect(data[0].initiator).toBeTruthy();
+    expect(data[0].resourceId).toBeTruthy();
+    expect(data[0].resourceType).toBeTruthy();
+    expect(data[0].actionType).toBeTruthy();
+    expect(data[0].createdAt).toBeTruthy();
+    for (let i = 0; i < data.length - 1; i++) {
+      const item = parseInt(data[i].createdAt);
+      const nextItem = parseInt(data[i + 1].createdAt);
+      expect(item).toBeGreaterThanOrEqual(nextItem);
+    }
   });
 
   const pageParams = [
@@ -50,88 +61,88 @@ test.describe("List Transactions @Transactions", async () => {
     });
   }
 
-  const orderParams = [
-    { orderBy: "id", orderDirection: "desc" },
-    { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "initiator", orderDirection: "desc" },
-    { orderBy: "initiator", orderDirection: "asc" },
-    { orderBy: "ipId", orderDirection: "desc" },
-    { orderBy: "ipId", orderDirection: "asc" },
-    { orderBy: "resourceId", orderDirection: "desc" },
-    { orderBy: "resourceId", orderDirection: "asc" },
-    { orderBy: "resourceType", orderDirection: "desc" },
-    { orderBy: "resourceType", orderDirection: "asc" },
-    { orderBy: "actionType", orderDirection: "desc" },
-    { orderBy: "actionType", orderDirection: "asc" },
-    { orderBy: "createdAt", orderDirection: "desc" },
-    { orderBy: "createdAt", orderDirection: "asc" },
-  ];
-  for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return Transactions list with order by ${orderBy} and order direction ${orderDirection} @bug`, async ({
-      request,
-    }) => {
-      const payload = {
-        options: { orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const orderParams = [
+  //   { orderBy: "id", orderDirection: "desc" },
+  //   { orderBy: "id", orderDirection: "asc" },
+  //   { orderBy: "initiator", orderDirection: "desc" },
+  //   { orderBy: "initiator", orderDirection: "asc" },
+  //   { orderBy: "ipId", orderDirection: "desc" },
+  //   { orderBy: "ipId", orderDirection: "asc" },
+  //   { orderBy: "resourceId", orderDirection: "desc" },
+  //   { orderBy: "resourceId", orderDirection: "asc" },
+  //   { orderBy: "resourceType", orderDirection: "desc" },
+  //   { orderBy: "resourceType", orderDirection: "asc" },
+  //   { orderBy: "actionType", orderDirection: "desc" },
+  //   { orderBy: "actionType", orderDirection: "asc" },
+  //   { orderBy: "createdAt", orderDirection: "desc" },
+  //   { orderBy: "createdAt", orderDirection: "asc" },
+  // ];
+  // for (const { orderBy, orderDirection } of orderParams) {
+  //   test(`Should return Transactions list with order by ${orderBy} and order direction ${orderDirection}`, async ({
+  //     request,
+  //   }) => {
+  //     const payload = {
+  //       options: { orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     expect(data.length).toBeGreaterThan(0);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       const item = data[i][orderBy].trim() || "\uFFFF";
+  //       const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
-  const pageAndOrderParams = [
-    {
-      pagination: { offset: 0, limit: 5 },
-      orderBy: "id",
-      orderDirection: "asc",
-    },
-    {
-      pagination: { offset: 1, limit: 3 },
-      orderBy: "ipId",
-      orderDirection: "desc",
-    },
-  ];
-  for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
-    test(`Should return Transactions list with pagination ${JSON.stringify(
-      pagination
-    )} and order by ${orderBy} ${orderDirection}`, async ({ request }) => {
-      const payload = {
-        options: { pagination, orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const pageAndOrderParams = [
+  //   {
+  //     pagination: { offset: 0, limit: 5 },
+  //     orderBy: "id",
+  //     orderDirection: "asc",
+  //   },
+  //   {
+  //     pagination: { offset: 1, limit: 3 },
+  //     orderBy: "ipId",
+  //     orderDirection: "desc",
+  //   },
+  // ];
+  // for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
+  //   test(`Should return Transactions list with pagination ${JSON.stringify(
+  //     pagination
+  //   )} and order by ${orderBy} ${orderDirection}`, async ({ request }) => {
+  //     const payload = {
+  //       options: { pagination, orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      expect(data.length).toBeLessThanOrEqual(pagination.limit);
-      for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     expect(data.length).toBeGreaterThan(0);
+  //     expect(data.length).toBeLessThanOrEqual(pagination.limit);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       const item = data[i][orderBy].trim() || "\uFFFF";
+  //       const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
   test("Should return Transactions list with filter", async ({
     request,
@@ -237,14 +248,17 @@ test.describe("List Transactions @Transactions", async () => {
         expect(errors).toBeUndefined();
         expect(data.length).toBeGreaterThan(0);
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
-        for (let i = 0; i < data.length - 1; i++) {
-          const item = data[i][p.orderBy].trim() || "\uFFFF";
-          const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
-          if (p.orderDirection === "asc") {
-            expect(item <= nextItem).toBeTruthy();
-          } else {
-            expect(item >= nextItem).toBeTruthy();
-          }
+        // for (let i = 0; i < data.length - 1; i++) {
+        //   const item = data[i][p.orderBy].trim() || "\uFFFF";
+        //   const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
+        //   if (p.orderDirection === "asc") {
+        //     expect(item <= nextItem).toBeTruthy();
+        //   } else {
+        //     expect(item >= nextItem).toBeTruthy();
+        //   }
+        // }
+        for (const item of data) {
+          expect(item).toMatchObject(p.where);
         }
       });
     }

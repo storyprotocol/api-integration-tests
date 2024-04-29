@@ -17,21 +17,27 @@ test.describe("Get an IPAsset @IPAssets", () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.id).toBe(assetId);
-          expect(typeof data.tokenId).toBe("string");
-          expect(typeof data.chainId).toBe("string");
-          expect(Array.isArray(data.parentIpIds)).toBeTruthy();
-          expect(Array.isArray(data.childIpIds)).toBeTruthy();
-          expect(Array.isArray(data.rootIpIds)).toBeTruthy();
-          expect(typeof data.metadataResolverAddress).toBe("string");
-          expect(typeof data.metadata.name).toBe("string");
-          expect(typeof data.metadata.hash).toBe("string");
-          expect(typeof data.metadata.uri).toBe("string");
-          expect(typeof data.metadata.registrant).toBe("string");
-          expect(typeof data.metadata.registrationDate).toBe("string");
+          expect(Array.isArray(data.parentIpIds ?? [])).toBeTruthy();
+          expect(Array.isArray(data.childIpIds ?? [])).toBeTruthy();
+          expect(Array.isArray(data.rootIpIds ?? [])).toBeTruthy();
+          expect(typeof data.nftMetadata.name).toBe("string");
+          expect(typeof data.nftMetadata.chainId).toBe("string");
+          expect(typeof data.nftMetadata.tokenId).toBe("string");
+          expect(typeof data.nftMetadata.tokenUri).toBe("string");
+          expect(typeof data.nftMetadata.imageUrl).toBe("string");
+          expect(typeof data.nftMetadata.tokenContract).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.nftMetadata.name).toBeTruthy();
+          expect(data.nftMetadata.chainId).toBeTruthy();
+          expect(data.nftMetadata.tokenId).toBeTruthy();
+          expect(data.nftMetadata.tokenUri).toBeTruthy();
+          expect(data.nftMetadata.tokenContract).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

@@ -44,23 +44,23 @@ test.describe("Should return 401 for invalid api key @API-KEY", () => {
     expect(response.status()).toBe(401);
   });
 
-  test("Post /ipapolicies", async () => {
-    const response = await context.post("./ipapolicies");
+  test("Post /licenses/templates", async () => {
+    const response = await context.post("./licenses/templates");
     expect(response.status()).toBe(401);
   });
 
-  test("Get /ipapolicies/{ipapolicyId}", async () => {
-    const response = await context.get("./ipapolicies/1");
+  test("Get /licenses/templates/{id}", async () => {
+    const response = await context.get("./licenses/templates/1");
     expect(response.status()).toBe(401);
   });
 
-  test("Post /licenses", async () => {
-    const response = await context.post("./licenses");
+  test("Post /licenses/terms", async () => {
+    const response = await context.post("./licenses/terms");
     expect(response.status()).toBe(401);
   });
 
-  test("Get /licenses/{licenseId}", async () => {
-    const response = await context.get("./licenses/1");
+  test("Get /licenses/terms/{id}", async () => {
+    const response = await context.get("./licenses/terms/1");
     expect(response.status()).toBe(401);
   });
 
@@ -74,13 +74,23 @@ test.describe("Should return 401 for invalid api key @API-KEY", () => {
     expect(response.status()).toBe(401);
   });
 
-  test("Post /licenses/owners", async () => {
-    const response = await context.post("./licenses/owners");
+  test("Post /licenses/tokens", async () => {
+    const response = await context.post("./licenses/tokens");
     expect(response.status()).toBe(401);
   });
 
-  test("Get /licenses/owners/{ownerId}", async () => {
-    const response = await context.get("./licenses/owners/1");
+  test("Get /licenses/tokens/{id}", async () => {
+    const response = await context.get("./licenses/tokens/1");
+    expect(response.status()).toBe(401);
+  });
+
+  test("Post /licenses/ip/terms", async () => {
+    const response = await context.post("./licenses/ip/terms");
+    expect(response.status()).toBe(401);
+  });
+
+  test("Get /licenses/ip/terms/{id}", async () => {
+    const response = await context.get("./licenses/ip/terms/1");
     expect(response.status()).toBe(401);
   });
 
@@ -104,26 +114,6 @@ test.describe("Should return 401 for invalid api key @API-KEY", () => {
     expect(response.status()).toBe(401);
   });
 
-  test("Post /policies", async () => {
-    const response = await context.post("./policies");
-    expect(response.status()).toBe(401);
-  });
-
-  test("Get /policies/{policyId}", async () => {
-    const response = await context.get("./policies/1");
-    expect(response.status()).toBe(401);
-  });
-
-  test("Post /policies/frameworks", async () => {
-    const response = await context.post("./policies/frameworks");
-    expect(response.status()).toBe(401);
-  });
-
-  test("Get /policies/frameworks/{frameworkId}", async () => {
-    const response = await context.get("./policies/frameworks/1");
-    expect(response.status()).toBe(401);
-  });
-
   test("Post /royalties/payments", async () => {
     const response = await context.post("./royalties/payments");
     expect(response.status()).toBe(401);
@@ -141,11 +131,6 @@ test.describe("Should return 401 for invalid api key @API-KEY", () => {
 
   test("Get /royalties/policies/{policyId}", async () => {
     const response = await context.get("./royalties/policies/1");
-    expect(response.status()).toBe(401);
-  });
-
-  test("Get /royalties/splits/{splitId}", async () => {
-    const response = await context.get("./royalties/splits/1");
     expect(response.status()).toBe(401);
   });
 

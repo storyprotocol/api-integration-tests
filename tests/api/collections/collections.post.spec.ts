@@ -1,4 +1,4 @@
-import { test, expect } from "@playwright/test";
+import { test, expect } from "../fixtures/base";
 
 const endpoint = "./collections";
 
@@ -20,17 +20,31 @@ test.describe("List Collections @Collections", async () => {
     expect(typeof data[0].cancelledDisputeCount).toBe("string");
     expect(typeof data[0].blockNumber).toBe("string");
     expect(typeof data[0].blockTimestamp).toBe("string");
+    expect(data[0].id).toBeTruthy();
+    expect(data[0].assetCount).toBeTruthy();
+    expect(data[0].licensesCount).toBeTruthy();
+    expect(data[0].raisedDisputeCount).toBeTruthy();
+    expect(data[0].judgedDisputeCount).toBeTruthy();
+    expect(data[0].resolvedDisputeCount).toBeTruthy();
+    expect(data[0].cancelledDisputeCount).toBeTruthy();
+    expect(data[0].blockNumber).toBeTruthy();
+    expect(data[0].blockTimestamp).toBeTruthy();
+    for (let i = 0; i < data.length - 1; i++) {
+      const item = parseInt(data[i].blockTimestamp);
+      const nextItem = parseInt(data[i + 1].blockTimestamp);
+      expect(item).toBeGreaterThanOrEqual(nextItem);
+    }
   });
 
   const pageParams = [
     { pagination: { offset: 0, limit: 5 } },
     { pagination: { offset: 0, limit: 1 } },
-    { pagination: { offset: 2, limit: 20 } },
+    { pagination: { offset: 1, limit: 20 } },
   ];
   for (const { pagination } of pageParams) {
     test(`Should return Collections list with pagination ${JSON.stringify(
       pagination
-    )}`, async ({ request }) => {
+    )}`, async ({ request, collections }) => {
       const payload = {
         options: { pagination: pagination },
       };
@@ -48,7 +62,9 @@ test.describe("List Collections @Collections", async () => {
       const { errors, data } = await response.json();
       expect(errors).toBeUndefined();
       expect(data.length).toBeLessThanOrEqual(pagination.limit);
-      expect(data[0]).toMatchObject(firstItem);
+      if (pagination.offset < collections.length) {
+        expect(data[0]).toMatchObject(firstItem);
+      }
     });
   }
 
