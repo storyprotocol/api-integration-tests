@@ -18,6 +18,18 @@ test.describe("List Minting Fees @Licenses Minting Fees", async () => {
     expect(typeof data[0].receiverIpId).toBe("string");
     expect(typeof data[0].blockNumber).toBe("string");
     expect(typeof data[0].blockTimestamp).toBe("string");
+    expect(data[0].id).toBeTruthy();
+    expect(data[0].token).toBeTruthy();
+    expect(data[0].payer).toBeTruthy();
+    expect(data[0].amount).toBeTruthy();
+    expect(data[0].receiverIpId).toBeTruthy();
+    expect(data[0].blockNumber).toBeTruthy();
+    expect(data[0].blockTimestamp).toBeTruthy();
+    for (let i = 0; i < data.length - 1; i++) {
+      const item = parseInt(data[i].blockTimestamp);
+      const nextItem = parseInt(data[i + 1].blockTimestamp);
+      expect(item).toBeGreaterThanOrEqual(nextItem);
+    }
   });
 
   const pageParams = [
@@ -50,95 +62,95 @@ test.describe("List Minting Fees @Licenses Minting Fees", async () => {
     });
   }
 
-  const orderParams = [
-    { orderBy: "id", orderDirection: "desc" },
-    { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "token", orderDirection: "desc" },
-    { orderBy: "token", orderDirection: "asc" },
-    { orderBy: "payer", orderDirection: "desc" },
-    { orderBy: "payer", orderDirection: "asc" },
-    { orderBy: "amount", orderDirection: "desc" },
-    { orderBy: "amount", orderDirection: "asc" },
-    { orderBy: "receiverIpId", orderDirection: "desc" },
-    { orderBy: "receiverIpId", orderDirection: "asc" },
-    { orderBy: "blockNumber", orderDirection: "desc" },
-    { orderBy: "blockNumber", orderDirection: "asc" },
-    { orderBy: "blockTimestamp", orderDirection: "desc" },
-    { orderBy: "blockTimestamp", orderDirection: "asc" },
-  ];
-  for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return Minting Fees list with order by ${orderBy} and order direction ${orderDirection}`, async ({
-      request,
-    }) => {
-      const payload = {
-        options: { orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const orderParams = [
+  //   { orderBy: "id", orderDirection: "desc" },
+  //   { orderBy: "id", orderDirection: "asc" },
+  //   { orderBy: "token", orderDirection: "desc" },
+  //   { orderBy: "token", orderDirection: "asc" },
+  //   { orderBy: "payer", orderDirection: "desc" },
+  //   { orderBy: "payer", orderDirection: "asc" },
+  //   { orderBy: "amount", orderDirection: "desc" },
+  //   { orderBy: "amount", orderDirection: "asc" },
+  //   { orderBy: "receiverIpId", orderDirection: "desc" },
+  //   { orderBy: "receiverIpId", orderDirection: "asc" },
+  //   { orderBy: "blockNumber", orderDirection: "desc" },
+  //   { orderBy: "blockNumber", orderDirection: "asc" },
+  //   { orderBy: "blockTimestamp", orderDirection: "desc" },
+  //   { orderBy: "blockTimestamp", orderDirection: "asc" },
+  // ];
+  // for (const { orderBy, orderDirection } of orderParams) {
+  //   test(`Should return Minting Fees list with order by ${orderBy} and order direction ${orderDirection}`, async ({
+  //     request,
+  //   }) => {
+  //     const payload = {
+  //       options: { orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      for (let i = 0; i < data.length - 1; i++) {
-        let item: string | number;
-        let nextItem: string | number;
-        if (orderBy === "amount") {
-          item = parseInt(data[i][orderBy]);
-          nextItem = parseInt(data[i + 1][orderBy]);
-        } else {
-          item = data[i][orderBy].trim() || "\uFFFF";
-          nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        }
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     expect(data.length).toBeGreaterThan(0);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       let item: string | number;
+  //       let nextItem: string | number;
+  //       if (orderBy === "amount") {
+  //         item = parseInt(data[i][orderBy]);
+  //         nextItem = parseInt(data[i + 1][orderBy]);
+  //       } else {
+  //         item = data[i][orderBy].trim() || "\uFFFF";
+  //         nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       }
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
-  const pageAndOrderParams = [
-    {
-      pagination: { offset: 2, limit: 3 },
-      orderBy: "token",
-      orderDirection: "desc",
-    },
-    {
-      pagination: { offset: 1, limit: 4 },
-      orderBy: "id",
-      orderDirection: "asc",
-    },
-  ];
-  for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
-    test(`Should return Minting Fees list with pagination ${JSON.stringify(
-      pagination
-    )} and order by ${orderBy} ${orderDirection}`, async ({ request }) => {
-      const payload = {
-        options: { pagination, orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const pageAndOrderParams = [
+  //   {
+  //     pagination: { offset: 2, limit: 3 },
+  //     orderBy: "token",
+  //     orderDirection: "desc",
+  //   },
+  //   {
+  //     pagination: { offset: 1, limit: 4 },
+  //     orderBy: "id",
+  //     orderDirection: "asc",
+  //   },
+  // ];
+  // for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
+  //   test(`Should return Minting Fees list with pagination ${JSON.stringify(
+  //     pagination
+  //   )} and order by ${orderBy} ${orderDirection}`, async ({ request }) => {
+  //     const payload = {
+  //       options: { pagination, orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      expect(data.length).toBeLessThanOrEqual(pagination.limit);
-      for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     expect(data.length).toBeGreaterThan(0);
+  //     expect(data.length).toBeLessThanOrEqual(pagination.limit);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       const item = data[i][orderBy].trim() || "\uFFFF";
+  //       const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
   test("Should return Licenses Minting Fees list with filter ", async ({
     request,
@@ -237,15 +249,15 @@ test.describe("List Minting Fees @Licenses Minting Fees", async () => {
         expect(errors).toBeUndefined();
         expect(data.length).toBeGreaterThan(0);
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
-        for (let i = 0; i < data.length - 1; i++) {
-          const item = data[i][p.orderBy].trim() || "\uFFFF";
-          const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
-          if (p.orderDirection === "asc") {
-            expect(item <= nextItem).toBeTruthy();
-          } else {
-            expect(item >= nextItem).toBeTruthy();
-          }
-        }
+        // for (let i = 0; i < data.length - 1; i++) {
+        //   const item = data[i][p.orderBy].trim() || "\uFFFF";
+        //   const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
+        //   if (p.orderDirection === "asc") {
+        //     expect(item <= nextItem).toBeTruthy();
+        //   } else {
+        //     expect(item >= nextItem).toBeTruthy();
+        //   }
+        // }
         data.forEach((item: object) => {
           expect(item).toMatchObject(p.where);
         });

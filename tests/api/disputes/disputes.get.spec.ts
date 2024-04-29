@@ -26,8 +26,16 @@ test.describe("Get a Dispute @Disputes", async () => {
           expect(typeof data.data).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.targetIpId).toBeTruthy();
+          expect(data.targetTag).toBeTruthy();
+          expect(data.arbitrationPolicy).toBeTruthy();
+          expect(data.evidenceLink).toBeTruthy();
+          expect(data.initiator).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

@@ -7,7 +7,7 @@ import { defineConfig } from '@playwright/test';
 import dotenv from 'dotenv';
 dotenv.config();
 
-const EnvName = process.env.test_env || 'story';
+const EnvName = process.env.test_env || 'sepolia';
 
 /**
  * See https://playwright.dev/docs/test-configuration.

@@ -31,8 +31,17 @@ test.describe("Get a Collection @Collections", async () => {
           expect(typeof data.cancelledDisputeCount).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.assetCount).toBeTruthy();
+          expect(data.licensesCount).toBeTruthy();
+          expect(data.raisedDisputeCount).toBeTruthy();
+          expect(data.judgedDisputeCount).toBeTruthy();
+          expect(data.resolvedDisputeCount).toBeTruthy();
+          expect(data.cancelledDisputeCount).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

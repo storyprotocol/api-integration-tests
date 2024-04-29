@@ -22,8 +22,13 @@ test.describe("Get a Module @Modules", async () => {
           expect(typeof data.deletedAt).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.name).toBeTruthy();
+          expect(data.module).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

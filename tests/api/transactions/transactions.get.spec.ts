@@ -30,8 +30,14 @@ test.describe("Get a Transaction @Transactions", async () => {
           expect(typeof data.resourceType).toBe("string");
           expect(typeof data.actionType).toBe("string");
           expect(typeof data.createdAt).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.initiator).toBeTruthy();
+          expect(data.resourceId).toBeTruthy();
+          expect(data.resourceType).toBeTruthy();
+          expect(data.actionType).toBeTruthy();
+          expect(data.createdAt).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }

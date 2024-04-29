@@ -3,7 +3,7 @@ import { test, expect } from "../fixtures/base";
 const endpoint = "./permissions";
 
 test.describe("Get a Permission @Permissions", async () => {
-  test("Should return Permissions detail @bug", async ({
+  test("Should return Permissions detail", async ({
     request,
     permissionsList,
   }) => {
@@ -26,6 +26,13 @@ test.describe("Get a Permission @Permissions", async () => {
           expect(typeof data.func).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.permission).toBeTruthy();
+          expect(data.signer).toBeTruthy();
+          expect(data.to).toBeTruthy();
+          expect(data.func).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
           expect(data).toBeNull();
         }

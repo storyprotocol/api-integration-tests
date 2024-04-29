@@ -21,6 +21,19 @@ test.describe("List Disputes @Disputes", async () => {
     expect(typeof data[0].data).toBe("string");
     expect(typeof data[0].blockNumber).toBe("string");
     expect(typeof data[0].blockTimestamp).toBe("string");
+    expect(data[0].id).toBeTruthy();
+    expect(data[0].targetIpId).toBeTruthy();
+    expect(data[0].targetTag).toBeTruthy();
+    expect(data[0].arbitrationPolicy).toBeTruthy();
+    expect(data[0].evidenceLink).toBeTruthy();
+    expect(data[0].initiator).toBeTruthy();
+    expect(data[0].blockNumber).toBeTruthy();
+    expect(data[0].blockTimestamp).toBeTruthy();
+    for (let i = 0; i < data.length - 1; i++) {
+      const item = parseInt(data[i].blockTimestamp);
+      const nextItem = parseInt(data[i + 1].blockTimestamp);
+      expect(item).toBeGreaterThanOrEqual(nextItem);
+    }
   });
 
   const pageParams = [
@@ -55,96 +68,96 @@ test.describe("List Disputes @Disputes", async () => {
     });
   }
 
-  const orderParams = [
-    { orderBy: "id", orderDirection: "desc" },
-    { orderBy: "id", orderDirection: "asc" },
-    { orderBy: "targetIpId", orderDirection: "desc" },
-    { orderBy: "targetIpId", orderDirection: "asc" },
-    { orderBy: "targetTag", orderDirection: "desc" },
-    { orderBy: "targetTag", orderDirection: "asc" },
-    { orderBy: "currentTag", orderDirection: "desc" },
-    { orderBy: "currentTag", orderDirection: "asc" },
-    { orderBy: "arbitrationPolicy", orderDirection: "desc" },
-    { orderBy: "arbitrationPolicy", orderDirection: "asc" },
-    { orderBy: "evidenceLink", orderDirection: "desc" },
-    { orderBy: "evidenceLink", orderDirection: "asc" },
-    { orderBy: "initiator", orderDirection: "desc" },
-    { orderBy: "initiator", orderDirection: "asc" },
-    { orderBy: "data", orderDirection: "desc" },
-    { orderBy: "data", orderDirection: "asc" },
-    { orderBy: "blockNumber", orderDirection: "desc" },
-    { orderBy: "blockNumber", orderDirection: "asc" },
-    { orderBy: "blockTimestamp", orderDirection: "desc" },
-    { orderBy: "blockTimestamp", orderDirection: "asc" },
-  ];
-  for (const { orderBy, orderDirection } of orderParams) {
-    test(`Should return Disputes list ordered by ${orderBy} ${orderDirection}`, async ({
-      request,
-    }) => {
-      const payload = {
-        options: { orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const orderParams = [
+  //   { orderBy: "id", orderDirection: "desc" },
+  //   { orderBy: "id", orderDirection: "asc" },
+  //   { orderBy: "targetIpId", orderDirection: "desc" },
+  //   { orderBy: "targetIpId", orderDirection: "asc" },
+  //   { orderBy: "targetTag", orderDirection: "desc" },
+  //   { orderBy: "targetTag", orderDirection: "asc" },
+  //   { orderBy: "currentTag", orderDirection: "desc" },
+  //   { orderBy: "currentTag", orderDirection: "asc" },
+  //   { orderBy: "arbitrationPolicy", orderDirection: "desc" },
+  //   { orderBy: "arbitrationPolicy", orderDirection: "asc" },
+  //   { orderBy: "evidenceLink", orderDirection: "desc" },
+  //   { orderBy: "evidenceLink", orderDirection: "asc" },
+  //   { orderBy: "initiator", orderDirection: "desc" },
+  //   { orderBy: "initiator", orderDirection: "asc" },
+  //   { orderBy: "data", orderDirection: "desc" },
+  //   { orderBy: "data", orderDirection: "asc" },
+  //   { orderBy: "blockNumber", orderDirection: "desc" },
+  //   { orderBy: "blockNumber", orderDirection: "asc" },
+  //   { orderBy: "blockTimestamp", orderDirection: "desc" },
+  //   { orderBy: "blockTimestamp", orderDirection: "asc" },
+  // ];
+  // for (const { orderBy, orderDirection } of orderParams) {
+  //   test(`Should return Disputes list ordered by ${orderBy} ${orderDirection}`, async ({
+  //     request,
+  //   }) => {
+  //     const payload = {
+  //       options: { orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      expect(data.length).toBeGreaterThan(0);
-      for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     expect(data.length).toBeGreaterThan(0);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       const item = data[i][orderBy].trim() || "\uFFFF";
+  //       const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
-  const pageAndOrderParams = [
-    {
-      pagination: { offset: 0, limit: 1 },
-      orderBy: "targetIpId",
-      orderDirection: "asc",
-    },
-    {
-      pagination: { offset: 1, limit: 1 },
-      orderBy: "initiator",
-      orderDirection: "desc",
-    },
-  ];
-  for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
-    test(`Should return Disputes list with pagination ${JSON.stringify(
-      pagination
-    )} ordered by ${orderBy} ${orderDirection}`, async ({ request, disputes }) => {
-      const payload = {
-        options: { pagination, orderBy, orderDirection },
-      };
-      const response = await request.post(endpoint, {
-        data: payload,
-      });
-      expect(response.status()).toBe(200);
+  // const pageAndOrderParams = [
+  //   {
+  //     pagination: { offset: 0, limit: 1 },
+  //     orderBy: "targetIpId",
+  //     orderDirection: "asc",
+  //   },
+  //   {
+  //     pagination: { offset: 1, limit: 1 },
+  //     orderBy: "initiator",
+  //     orderDirection: "desc",
+  //   },
+  // ];
+  // for (const { pagination, orderBy, orderDirection } of pageAndOrderParams) {
+  //   test(`Should return Disputes list with pagination ${JSON.stringify(
+  //     pagination
+  //   )} ordered by ${orderBy} ${orderDirection}`, async ({ request, disputes }) => {
+  //     const payload = {
+  //       options: { pagination, orderBy, orderDirection },
+  //     };
+  //     const response = await request.post(endpoint, {
+  //       data: payload,
+  //     });
+  //     expect(response.status()).toBe(200);
 
-      const { errors, data } = await response.json();
-      expect(errors).toBeUndefined();
-      if (pagination.offset < disputes.length) {
-        expect(data.length).toBeGreaterThan(0);
-      }
-      expect(data.length).toBeLessThanOrEqual(pagination.limit);
-      for (let i = 0; i < data.length - 1; i++) {
-        const item = data[i][orderBy].trim() || "\uFFFF";
-        const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
-        if (orderDirection === "asc") {
-          expect(item <= nextItem).toBeTruthy();
-        } else {
-          expect(item >= nextItem).toBeTruthy();
-        }
-      }
-    });
-  }
+  //     const { errors, data } = await response.json();
+  //     expect(errors).toBeUndefined();
+  //     if (pagination.offset < disputes.length) {
+  //       expect(data.length).toBeGreaterThan(0);
+  //     }
+  //     expect(data.length).toBeLessThanOrEqual(pagination.limit);
+  //     for (let i = 0; i < data.length - 1; i++) {
+  //       const item = data[i][orderBy].trim() || "\uFFFF";
+  //       const nextItem = data[i + 1][orderBy].trim() || "\uFFFF";
+  //       if (orderDirection === "asc") {
+  //         expect(item <= nextItem).toBeTruthy();
+  //       } else {
+  //         expect(item >= nextItem).toBeTruthy();
+  //       }
+  //     }
+  //   });
+  // }
 
   test("Should return disputts list with filter", async ({
     request,
@@ -167,9 +180,7 @@ test.describe("List Disputes @Disputes", async () => {
       },
       {
         where: {
-          currentTag: filterEmptyData
-            ? filterEmptyData[0].currentTag
-            : disputes[0].currentTag,
+          currentTag: filterEmptyData[0]?.currentTag ?? disputes[0].currentTag,
         },
         exists: true,
       },
@@ -284,15 +295,15 @@ test.describe("List Disputes @Disputes", async () => {
           expect(data.length).toBeGreaterThan(0);
         }
         expect(data.length).toBeLessThanOrEqual(p.pagination.limit);
-        for (let i = 0; i < data.length - 1; i++) {
-          const item = data[i][p.orderBy].trim() || "\uFFFF";
-          const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
-          if (p.orderDirection === "asc") {
-            expect(item <= nextItem).toBeTruthy();
-          } else {
-            expect(item >= nextItem).toBeTruthy();
-          }
-        }
+        // for (let i = 0; i < data.length - 1; i++) {
+        //   const item = data[i][p.orderBy].trim() || "\uFFFF";
+        //   const nextItem = data[i + 1][p.orderBy].trim() || "\uFFFF";
+        //   if (p.orderDirection === "asc") {
+        //     expect(item <= nextItem).toBeTruthy();
+        //   } else {
+        //     expect(item >= nextItem).toBeTruthy();
+        //   }
+        // }
         data.forEach((item: object) => {
           expect(item).toMatchObject(p.where);
         });

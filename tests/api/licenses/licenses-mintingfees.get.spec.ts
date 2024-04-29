@@ -28,8 +28,15 @@ test.describe("Get a Minting Fee @Licenses Minting Fees", async () => {
           expect(typeof data.receiverIpId).toBe("string");
           expect(typeof data.blockNumber).toBe("string");
           expect(typeof data.blockTimestamp).toBe("string");
+          expect(data.id).toBeTruthy();
+          expect(data.token).toBeTruthy();
+          expect(data.payer).toBeTruthy();
+          expect(data.amount).toBeTruthy();
+          expect(data.receiverIpId).toBeTruthy();
+          expect(data.blockNumber).toBeTruthy();
+          expect(data.blockTimestamp).toBeTruthy();
         } else {
-          expect(data).toBeNull();
+          expect(data.id).toBeFalsy();
         }
       });
     }
@@ -37,8 +44,6 @@ test.describe("Get a Minting Fee @Licenses Minting Fees", async () => {
 
   test("Should return null for no licenseMintingFeeId", async ({ request }) => {
     const response = await request.get(endpoint);
-    expect(response.status()).toBe(200);
-    const { data } = await response.json();
-    expect(data).toBeNull();
+    expect(response.status()).toBe(404);
   });
 });
