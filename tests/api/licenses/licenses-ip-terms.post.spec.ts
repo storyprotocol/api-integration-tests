@@ -12,20 +12,20 @@ test.describe("List LicenseIpTerms @Licenses", () => {
     expect(Array.isArray(data)).toBeTruthy();
     expect(data.length).toBeGreaterThan(0);
     expect(typeof data[0].id).toBe("string");
-    expect(typeof data[0].ip_id).toBe("string");
-    expect(typeof data[0].license_template).toBe("string");
-    expect(typeof data[0].license_terms_id).toBe("string");
-    expect(typeof data[0].block_number).toBe("string");
-    expect(typeof data[0].block_time).toBe("string");
+    expect(typeof data[0].ipId).toBe("string");
+    expect(typeof data[0].licenseTemplate).toBe("string");
+    expect(typeof data[0].licenseTermsId).toBe("string");
+    expect(typeof data[0].blockNumber).toBe("string");
+    expect(typeof data[0].blockTime).toBe("string");
     expect(data[0].id).toBeTruthy();
-    expect(data[0].ip_id).toBeTruthy();
-    expect(data[0].license_template).toBeTruthy();
-    expect(data[0].license_terms_id).toBeTruthy();
-    expect(data[0].block_number).toBeTruthy();
-    expect(data[0].block_time).toBeTruthy();
+    expect(data[0].ipId).toBeTruthy();
+    expect(data[0].licenseTemplate).toBeTruthy();
+    expect(data[0].licenseTermsId).toBeTruthy();
+    expect(data[0].blockNumber).toBeTruthy();
+    expect(data[0].blockTime).toBeTruthy();
     for (let i = 0; i < data.length - 1; i++) {
-      const item = parseInt(data[i].block_time);
-      const nextItem = parseInt(data[i + 1].block_time);
+      const item = parseInt(data[i].blockTime);
+      const nextItem = parseInt(data[i + 1].blockTime);
       expect(item).toBeGreaterThanOrEqual(nextItem);
     }
   });
