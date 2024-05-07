@@ -4,34 +4,30 @@ const endpoint = "./modules";
 
 test.describe("Get a Module @Modules", async () => {
   test("Should return Modules detail", async ({ request, modules }) => {
-    const params = [
-      { moduleId: modules[1].id, exists: true },
-      { moduleId: "0x950d766a1a0afdc33c3e653c861a8765cb42d999", exists: false },
-    ];
-    for (const { moduleId, exists } of params) {
-      await test.step(`Query with moduleId ${moduleId}`, async () => {
-        const response = await request.get(endpoint + `/${moduleId}`);
-        expect(response.status()).toBe(200);
+    const moduleId = modules[1].id;
+    const response = await request.get(endpoint + `/${moduleId}`);
+    expect(response.status()).toBe(200);
 
-        const { errors, data } = await response.json();
-        expect(errors).toBeUndefined();
-        if (exists) {
-          expect(data.id).toBe(moduleId);
-          expect(typeof data.name).toBe("string");
-          expect(typeof data.module).toBe("string");
-          expect(typeof data.deletedAt).toBe("string");
-          expect(typeof data.blockNumber).toBe("string");
-          expect(typeof data.blockTimestamp).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.name).toBeTruthy();
-          expect(data.module).toBeTruthy();
-          expect(data.blockNumber).toBeTruthy();
-          expect(data.blockTimestamp).toBeTruthy();
-        } else {
-          expect(data.id).toBeFalsy();
-        }
-      });
-    }
+    const { errors, data } = await response.json();
+    expect(errors).toBeUndefined();
+    expect(data.id).toBe(moduleId);
+    expect.soft(typeof data.name).toBe("string");
+    expect.soft(typeof data.module).toBe("string");
+    expect.soft(typeof data.deletedAt).toBe("string");
+    expect.soft(typeof data.blockNumber).toBe("string");
+    expect.soft(typeof data.blockTimestamp).toBe("string");
+    expect.soft(data.id).toBeTruthy();
+    expect.soft(data.name).toBeTruthy();
+    expect.soft(data.module).toBeTruthy();
+    expect.soft(data.blockNumber).toBeTruthy();
+    expect.soft(data.blockTimestamp).toBeTruthy();
+  });
+
+  test("Should return 404 for non-exist moduleId", async ({ request }) => {
+    const response = await request.get(
+      endpoint + "/0x950d766a1a0afdc33c3e653c861a8765cb42d999"
+    );
+    expect(response.status()).toBe(404);
   });
 
   test("Should return 404 for no moduleId", async ({ request }) => {

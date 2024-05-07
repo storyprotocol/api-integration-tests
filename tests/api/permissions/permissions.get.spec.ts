@@ -7,37 +7,31 @@ test.describe("Get a Permission @Permissions", async () => {
     request,
     permissionsList,
   }) => {
-    const params = [
-      { permissionId: permissionsList[1].id, exists: true },
-      { permissionId: "0x93c5f4a647d060x55", exists: false },
-    ];
-    for (const { permissionId, exists } of params) {
-      await test.step(`Query with permissionId ${permissionId}`, async () => {
-        const response = await request.get(endpoint + `/${permissionId}`);
-        expect(response.status()).toBe(200);
+    const permissionId = permissionsList[1].id;
+    const response = await request.get(endpoint + `/${permissionId}`);
+    expect(response.status()).toBe(200);
 
-        const { errors, data } = await response.json();
-        expect(errors).toBeUndefined();
-        if (exists) {
-          expect(data.id).toBe(permissionId);
-          expect(typeof data.permission).toBe("string");
-          expect(typeof data.signer).toBe("string");
-          expect(typeof data.to).toBe("string");
-          expect(typeof data.func).toBe("string");
-          expect(typeof data.blockNumber).toBe("string");
-          expect(typeof data.blockTimestamp).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.permission).toBeTruthy();
-          expect(data.signer).toBeTruthy();
-          expect(data.to).toBeTruthy();
-          expect(data.func).toBeTruthy();
-          expect(data.blockNumber).toBeTruthy();
-          expect(data.blockTimestamp).toBeTruthy();
-        } else {
-          expect(data).toBeNull();
-        }
-      });
-    }
+    const { errors, data } = await response.json();
+    expect(errors).toBeUndefined();
+    expect(data.id).toBe(permissionId);
+    expect.soft(typeof data.permission).toBe("string");
+    expect.soft(typeof data.signer).toBe("string");
+    expect.soft(typeof data.to).toBe("string");
+    expect.soft(typeof data.func).toBe("string");
+    expect.soft(typeof data.blockNumber).toBe("string");
+    expect.soft(typeof data.blockTimestamp).toBe("string");
+    expect.soft(data.id).toBeTruthy();
+    expect.soft(data.permission).toBeTruthy();
+    expect.soft(data.signer).toBeTruthy();
+    expect.soft(data.to).toBeTruthy();
+    expect.soft(data.func).toBeTruthy();
+    expect.soft(data.blockNumber).toBeTruthy();
+    expect.soft(data.blockTimestamp).toBeTruthy();
+  });
+
+  test("Should return 404 for non-exist permissionId", async ({ request }) => {
+    const response = await request.get(endpoint + "/0x93c5f4a647d060x55");
+    expect(response.status()).toBe(404);
   });
 
   test("Should return 404 for no permissionId", async ({ request }) => {

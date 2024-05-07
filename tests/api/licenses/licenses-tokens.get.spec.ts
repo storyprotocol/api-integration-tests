@@ -17,40 +17,40 @@ test.describe("Get LicenseToken @Licenses", () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.id).toBe(licenseTokenId);
-          expect(typeof data.licensor_ip_id).toBe("string");
-          expect(typeof data.license_template).toBe("string");
-          expect(typeof data.license_terms_id).toBe("string");
-          expect(typeof data.transferable).toBe("string");
-          expect(typeof data.owner).toBe("string");
-          expect(typeof data.minted_at).toBe("string");
-          expect(typeof data.expires_at).toBe("string");
-          expect(typeof data.burnt_at).toBe("string");
-          expect(typeof data.block_number).toBe("string");
-          expect(typeof data.block_time).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.licensor_ip_id).toBeTruthy();
-          expect(data.license_template).toBeTruthy();
-          expect(data.license_terms_id).toBeTruthy();
-          expect(data.transferable).toBeTruthy();
-          expect(data.owner).toBeTruthy();
-          expect(data.minted_at).toBeTruthy();
-          expect(data.expires_at).toBeTruthy();
-          expect(data.burnt_at).toBeTruthy();
-          expect(data.block_number).toBeTruthy();
-          expect(data.block_time).toBeTruthy();
+          expect.soft(typeof data.licensorIpId).toBe("string");
+          expect.soft(typeof data.licenseTemplate).toBe("string");
+          expect.soft(typeof data.licenseTermsId).toBe("string");
+          expect.soft(typeof data.transferable).toBe("string");
+          expect.soft(typeof data.owner).toBe("string");
+          expect.soft(typeof data.mintedAt).toBe("string");
+          expect.soft(typeof data.expiresAt).toBe("string");
+          expect.soft(typeof data.burntAt).toBe("string");
+          expect.soft(typeof data.blockNumber).toBe("string");
+          expect.soft(typeof data.blockTime).toBe("string");
+          expect.soft(data.id).toBeTruthy();
+          expect.soft(data.licensorIpId).toBeTruthy();
+          expect.soft(data.licenseTemplate).toBeTruthy();
+          expect.soft(data.licenseTermsId).toBeTruthy();
+          expect.soft(data.transferable).toBeTruthy();
+          expect.soft(data.owner).toBeTruthy();
+          expect.soft(data.mintedAt).toBeTruthy();
+          expect.soft(data.expiresAt).toBeTruthy();
+          expect.soft(data.burntAt).toBeTruthy();
+          expect.soft(data.blockNumber).toBeTruthy();
+          expect.soft(data.blockTime).toBeTruthy();
         } else {
           expect(data).toMatchObject({
             id: "",
-            licensor_ip_id: "",
-            license_template: "",
-            license_terms_id: "",
+            licensorIpId: "",
+            licenseTemplate: "",
+            licenseTermsId: "",
             transferable: "",
             owner: "",
-            minted_at: "",
-            expires_at: "",
-            burnt_at: "",
-            block_number: "",
-            block_time: "",
+            mintedAt: "",
+            expiresAt: "",
+            burntAt: "",
+            blockNumber: "",
+            blockTime: "",
           });
         }
       });

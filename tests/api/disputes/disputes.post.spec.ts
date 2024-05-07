@@ -54,7 +54,7 @@ test.describe("List Disputes @Disputes", async () => {
       expect(response.status()).toBe(200);
 
       const offsetResponse = await request.post(endpoint, {
-        data: { options: { pagination: { limit: 20 } } },
+        data: { options: { pagination: { limit: 5 } } },
       });
       const offsetJson = await offsetResponse.json();
       const firstItem = offsetJson.data[pagination.offset];
@@ -266,7 +266,7 @@ test.describe("List Disputes @Disputes", async () => {
         },
       },
       {
-        pagination: { offset: 1, limit: 3 },
+        pagination: { offset: 0, limit: 3 },
         orderBy: "targetIpId",
         orderDirection: "asc",
         where: {

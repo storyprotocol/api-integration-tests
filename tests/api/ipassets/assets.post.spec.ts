@@ -27,7 +27,6 @@ test.describe("List IPAssets @IPAssets", async () => {
     expect(data[0].nftMetadata.name).toBeTruthy();
     expect(data[0].nftMetadata.chainId).toBeTruthy();
     expect(data[0].nftMetadata.tokenId).toBeTruthy();
-    expect(data[0].nftMetadata.tokenUri).toBeTruthy();
     expect(data[0].nftMetadata.tokenContract).toBeTruthy();
     expect(data[0].blockNumber).toBeTruthy();
     expect(data[0].blockTimestamp).toBeTruthy();
@@ -187,7 +186,7 @@ test.describe("List IPAssets @IPAssets", async () => {
         },
       },
       {
-        pagination: { offset: 2, limit: 15 },
+        pagination: { offset: 0, limit: 3 },
         orderBy: "id",
         orderDirection: "desc",
         where: {

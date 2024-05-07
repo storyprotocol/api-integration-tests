@@ -17,19 +17,22 @@ test.describe("Get LicenseTerm @Licenses", () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.id).toBe(licenseTermId);
-          expect(typeof data.json).toBe("string");
-          expect(typeof data.license_template).toBe("string");
-          expect(typeof data.block_time).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.json).toBeTruthy();
-          expect(data.license_template).toBeTruthy();
-          expect(data.block_time).toBeTruthy();
+          expect.soft(Array.isArray(data.licenseTerms)).toBeTruthy();
+          expect.soft(typeof data.licenseTemplate).toBe("string");
+          expect.soft(typeof data.blockNumber).toBe("string");
+          expect.soft(typeof data.blockTime).toBe("string");
+          expect.soft(data.id).toBeTruthy();
+          expect.soft(data.licenseTerms).toBeTruthy();
+          expect.soft(data.licenseTemplate).toBeTruthy();
+          expect.soft(data.blockNumber).toBeTruthy();
+          expect.soft(data.blockTime).toBeTruthy();
         } else {
           expect(data).toMatchObject({
             id: "",
-            json: "",
-            license_template: "",
-            block_time: "",
+            licenseTerms: [],
+            licenseTemplate: "",
+            blockNumber: "",
+            blockTime: "",
           });
         }
       });

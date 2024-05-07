@@ -17,25 +17,24 @@ test.describe("Get LicenseIpTerm @Licenses", () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.id).toBe(licenseIpTermId);
-          expect(typeof data.ip_id).toBe("string");
-          expect(typeof data.license_template).toBe("string");
-          expect(typeof data.license_terms_id).toBe("string");
-          expect(typeof data.block_number).toBe("string");
-          expect(typeof data.block_time).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.ip_id).toBeTruthy();
-          expect(data.license_template).toBeTruthy();
-          expect(data.license_terms_id).toBeTruthy();
-          expect(data.block_number).toBeTruthy();
-          expect(data.block_time).toBeTruthy();
+          expect.soft(typeof data.ipId).toBe("string");
+          expect.soft(typeof data.licenseTemplate).toBe("string");
+          expect.soft(typeof data.licenseTermsId).toBe("string");
+          expect.soft(typeof data.blockNumber).toBe("string");
+          expect.soft(typeof data.blockTime).toBe("string");
+          expect.soft(data.ipId).toBeTruthy();
+          expect.soft(data.licenseTemplate).toBeTruthy();
+          expect.soft(data.licenseTermsId).toBeTruthy();
+          expect.soft(data.blockNumber).toBeTruthy();
+          expect.soft(data.blockTime).toBeTruthy();
         } else {
           expect(data).toMatchObject({
             id: "",
-            ip_id: "",
-            license_template: "",
-            license_terms_id: "",
-            block_number: "",
-            block_time: "",
+            ipId: "",
+            licenseTemplate: "",
+            licenseTermsId: "",
+            blockNumber: "",
+            blockTime: "",
           });
         }
       });

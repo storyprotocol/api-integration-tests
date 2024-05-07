@@ -17,22 +17,22 @@ test.describe("Get LicenseTemplate @Licenses", () => {
         expect(errors).toBeUndefined();
         if (exists) {
           expect(data.id).toBe(licenseTemplateId);
-          expect(typeof data.name).toBe("string");
-          expect(typeof data.metadata_uri).toBe("string");
-          expect(typeof data.block_number).toBe("string");
-          expect(typeof data.block_time).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.name).toBeTruthy();
-          expect(data.metadata_uri).toBeTruthy();
-          expect(data.block_number).toBeTruthy();
-          expect(data.block_time).toBeTruthy();
+          expect.soft(typeof data.name).toBe("string");
+          expect.soft(typeof data.metadataUri).toBe("string");
+          expect.soft(typeof data.blockNumber).toBe("string");
+          expect.soft(typeof data.blockTime).toBe("string");
+          expect.soft(data.id).toBeTruthy();
+          expect.soft(data.name).toBeTruthy();
+          expect.soft(data.metadataUri).toBeTruthy();
+          expect.soft(data.blockNumber).toBeTruthy();
+          expect.soft(data.blockTime).toBeTruthy();
         } else {
           expect(data).toMatchObject({
             id: "",
             name: "",
-            metadata_uri: "",
-            block_number: "",
-            block_time: "",
+            metadataUri: "",
+            blockNumber: "",
+            blockTime: "",
           });
         }
       });
