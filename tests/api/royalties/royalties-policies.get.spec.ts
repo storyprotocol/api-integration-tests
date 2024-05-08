@@ -7,38 +7,33 @@ test.describe("Get a Royalties Policy @Royalties", () => {
     request,
     royaltiesPolicies,
   }) => {
-    const params = [
-      { royaltyPolicyId: royaltiesPolicies[1].id, exists: true },
-      {
-        royaltyPolicyId: "0x484c10779f9c5209b371afa029797e76129d9999",
-        exists: false,
-      },
-    ];
-    for (const { royaltyPolicyId, exists } of params) {
-      await test.step(`Query with royaltyPolicyId ${royaltyPolicyId}`, async () => {
-        const response = await request.get(endpoint + `/${royaltyPolicyId}`);
-        expect(response.status()).toBe(200);
+    const royaltyPolicyId = royaltiesPolicies[1].id;
+    const response = await request.get(endpoint + `/${royaltyPolicyId}`);
+    expect(response.status()).toBe(200);
 
-        const { errors, data } = await response.json();
-        expect(errors).toBeUndefined();
-        if (exists) {
-          expect(data.id).toBe(royaltyPolicyId);
-          expect(typeof data.royaltyStack).toBe("string");
-          expect(typeof data.ipRoyaltyVault).toBe("string");
-          expect(Array.isArray(data.targetAncestors ?? [])).toBeTruthy();
-          expect(Array.isArray(data.targetRoyaltyAmount ?? [])).toBeTruthy();
-          expect(typeof data.blockNumber).toBe("string");
-          expect(typeof data.blockTimestamp).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.royaltyStack).toBeTruthy();
-          expect(data.ipRoyaltyVault).toBeTruthy();
-          expect(data.blockNumber).toBeTruthy();
-          expect(data.blockTimestamp).toBeTruthy();
-        } else {
-          expect(data.id).toBeFalsy();
-        }
-      });
-    }
+    const { errors, data } = await response.json();
+    expect(errors).toBeUndefined();
+    expect(data.id).toBe(royaltyPolicyId);
+    expect.soft(typeof data.royaltyStack).toBe("string");
+    expect.soft(typeof data.ipRoyaltyVault).toBe("string");
+    expect.soft(Array.isArray(data.targetAncestors ?? [])).toBeTruthy();
+    expect.soft(Array.isArray(data.targetRoyaltyAmount ?? [])).toBeTruthy();
+    expect.soft(typeof data.blockNumber).toBe("string");
+    expect.soft(typeof data.blockTimestamp).toBe("string");
+    expect.soft(data.id).toBeTruthy();
+    expect.soft(data.royaltyStack).toBeTruthy();
+    expect.soft(data.ipRoyaltyVault).toBeTruthy();
+    expect.soft(data.blockNumber).toBeTruthy();
+    expect.soft(data.blockTimestamp).toBeTruthy();
+  });
+
+  test("Should return 404 for non-exist royaltyPolicyId", async ({
+    request,
+  }) => {
+    const response = await request.get(
+      endpoint + "/0x484c10779f9c5209b371afa029797e76129d9999"
+    );
+    expect(response.status()).toBe(404);
   });
 
   test("Should return 404 for no royaltyPolicyId", async ({ request }) => {

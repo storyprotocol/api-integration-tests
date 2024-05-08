@@ -7,39 +7,33 @@ test.describe("Get a RoyaltyPay @Royalties", () => {
     request,
     royaltiesPayments,
   }) => {
-    const params = [
-      { royaltyPayId: royaltiesPayments[0].id, exists: true },
-      { royaltyPayId: "0x55ffbb07777249999", exists: false },
-    ];
-    for (const { royaltyPayId, exists } of params) {
-      await test.step(`Query with royaltyPayId ${royaltyPayId}`, async () => {
-        const response = await request.get(endpoint + `/${royaltyPayId}`);
-        expect(response.status()).toBe(200);
+    const royaltyPayId = royaltiesPayments[0].id;
+    const response = await request.get(endpoint + `/${royaltyPayId}`);
+    expect(response.status()).toBe(200);
 
-        const { errors, data } = await response.json();
-        expect(errors).toBeUndefined();
-        if (exists) {
-          expect(data.id).toBe(royaltyPayId);
-          expect(typeof data.payerIpId).toBe("string");
-          expect(typeof data.receiverIpId).toBe("string");
-          expect(typeof data.sender).toBe("string");
-          expect(typeof data.token).toBe("string");
-          expect(typeof data.amount).toBe("string");
-          expect(typeof data.blockNumber).toBe("string");
-          expect(typeof data.blockTimestamp).toBe("string");
-          expect(data.id).toBeTruthy();
-          expect(data.payerIpId).toBeTruthy();
-          expect(data.receiverIpId).toBeTruthy();
-          expect(data.sender).toBeTruthy();
-          expect(data.token).toBeTruthy();
-          expect(data.amount).toBeTruthy();
-          expect(data.blockNumber).toBeTruthy();
-          expect(data.blockTimestamp).toBeTruthy();
-        } else {
-          expect(data.id).toBeFalsy();
-        }
-      });
-    }
+    const { errors, data } = await response.json();
+    expect(errors).toBeUndefined();
+    expect(data.id).toBe(royaltyPayId);
+    expect.soft(typeof data.payerIpId).toBe("string");
+    expect.soft(typeof data.receiverIpId).toBe("string");
+    expect.soft(typeof data.sender).toBe("string");
+    expect.soft(typeof data.token).toBe("string");
+    expect.soft(typeof data.amount).toBe("string");
+    expect.soft(typeof data.blockNumber).toBe("string");
+    expect.soft(typeof data.blockTimestamp).toBe("string");
+    expect.soft(data.id).toBeTruthy();
+    expect.soft(data.payerIpId).toBeTruthy();
+    expect.soft(data.receiverIpId).toBeTruthy();
+    expect.soft(data.sender).toBeTruthy();
+    expect.soft(data.token).toBeTruthy();
+    expect.soft(data.amount).toBeTruthy();
+    expect.soft(data.blockNumber).toBeTruthy();
+    expect.soft(data.blockTimestamp).toBeTruthy();
+  });
+
+  test("Should return 404 for non-exist royaltyPayId", async ({ request }) => {
+    const response = await request.get(endpoint + "/0x55ffbb07777249999");
+    expect(response.status()).toBe(404);
   });
 
   test("Should return 404 for no royaltyPayId", async ({ request }) => {
