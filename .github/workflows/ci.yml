@@ -8,6 +8,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+  schedule:
+    # Runs at 10:00 UTC from March to November (PDT, UTC-7)
+    - cron: '0 10 * 3-11 *'
+    # Runs at 11:00 UTC from November to March (PST, UTC-8)
+    - cron: '0 11 * 1-3,11,12 *'
 
 jobs:
 
@@ -48,7 +53,7 @@ jobs:
       - name: Push Slack Notification
         uses: slackapi/slack-github-action@v1.25.0
         with:
-          channel-id: ${{ secrets.SLACK_CHANNEL_ID_GITHUB_NOTIFICATION }}
+          channel-id: ${{ secrets.SLACK_CHANNEL_ID_API_INTEGRATION_TESTS }}
           payload: |
             {
               "text": "${{ github.repository }}: API Integration Tests have been completed. Check the results at github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}",
