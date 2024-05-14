@@ -68,4 +68,34 @@ test.describe("List LicenseTokens @Licenses", () => {
       expect(data[0]).toMatchObject(firstItem);
     });
   }
+
+  test("query with filter", async ({ request, licensesTokens }) => {
+    const whereParams = [
+      { where: { licensorIpId: licensesTokens[1].licensorIpId }, exists: true },
+      {
+        where: { licensorIpId: "0x5FCeDadBbDF710Ac3C528F6Aac9D1bD9ac189999" },
+        exists: false,
+      },
+    ];
+    for (const { where, exists } of whereParams) {
+      await test.step(`query with where ${JSON.stringify(where)}`, async () => {
+        const payload = {
+          options: { where },
+        };
+        const response = await request.post(endpoint, {
+          data: payload,
+        });
+        expect(response.status()).toBe(200);
+
+        const { errors, data } = await response.json();
+        expect(errors).toBeUndefined();
+        if (exists) {
+          expect(data.length).toBeGreaterThan(0);
+          expect(data[0].licensorIpId).toBe(licensesTokens[1].licensorIpId);
+        } else {
+          expect(data.length).toBe(0);
+        }
+      });
+    }
+  });
 });

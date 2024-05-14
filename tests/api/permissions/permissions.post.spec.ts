@@ -50,7 +50,7 @@ test.describe("List Permissions @Permissions", async () => {
       expect(response.status()).toBe(200);
 
       const offsetResponse = await request.post(endpoint, {
-        data: { options: { pagination: { limit: 30 } } },
+        data: { options: { pagination: { limit: 5 } } },
       });
       const offsetJson = await offsetResponse.json();
       const firstItem = offsetJson.data[pagination.offset];

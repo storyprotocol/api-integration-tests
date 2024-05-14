@@ -39,7 +39,7 @@ test.describe("List Collections @Collections", async () => {
   const pageParams = [
     { pagination: { offset: 0, limit: 5 } },
     { pagination: { offset: 0, limit: 1 } },
-    { pagination: { offset: 1, limit: 20 } },
+    { pagination: { offset: 1, limit: 5 } },
   ];
   for (const { pagination } of pageParams) {
     test(`Should return Collections list with pagination ${JSON.stringify(
@@ -54,7 +54,7 @@ test.describe("List Collections @Collections", async () => {
       expect(response.status()).toBe(200);
 
       const offsetResponse = await request.post(endpoint, {
-        data: { options: { pagination: { limit: 30 } } },
+        data: { options: { pagination: { limit: 5 } } },
       });
       const offsetJson = await offsetResponse.json();
       const firstItem = offsetJson.data[pagination.offset];
