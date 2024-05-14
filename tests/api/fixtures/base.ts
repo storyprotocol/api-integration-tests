@@ -60,9 +60,11 @@ type TestOptions = {
   }>;
   licensesIpTerms: Array<{
     id: string;
+    ipId: string;
   }>;
   licensesTokens: Array<{
     id: string;
+    licensorIpId: string;
   }>;
 };
 

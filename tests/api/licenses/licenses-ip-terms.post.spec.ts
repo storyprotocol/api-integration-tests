@@ -47,7 +47,7 @@ test.describe("List LicenseIpTerms @Licenses", () => {
       expect(response.status()).toBe(200);
 
       const offsetResponse = await request.post(endpoint, {
-        data: { options: { pagination: { limit: 30 } } },
+        data: { options: { pagination: { limit: 5 } } },
       });
       const offsetJson = await offsetResponse.json();
       const firstItem = offsetJson.data[pagination.offset];
@@ -58,5 +58,36 @@ test.describe("List LicenseIpTerms @Licenses", () => {
       expect(data[0]).toMatchObject(firstItem);
     });
   }
-});
 
+  test("query with filter", async ({ request, licensesIpTerms }) => {
+    const whereParams = [
+      { where: { ipId: licensesIpTerms[1].ipId }, exists: true },
+      {
+        where: { ipId: "0xe7517E0Ee3e255a904BD777961C20566be089999" },
+        exists: false,
+      },
+    ];
+    for (const { where, exists } of whereParams) {
+      await test.step(`query with where ${JSON.stringify(where)}`, async () => {
+        const payload = {
+          options: { where },
+        };
+        const response = await request.post(endpoint, {
+          data: payload,
+        });
+        expect(response.status()).toBe(200);
+
+        const { errors, data } = await response.json();
+        expect(errors).toBeUndefined();
+        if (exists) {
+          expect(data.length).toBeGreaterThan(0);
+          data.forEach((item: object) => {
+            expect(item).toMatchObject(where);
+          });
+        } else {
+          expect(data.length).toBe(0);
+        }
+      });
+    }
+  });
+});
