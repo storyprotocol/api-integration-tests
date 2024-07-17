@@ -59,17 +59,6 @@ jobs:
           publish_branch: gh-pages
           keep_files: true
 
-      - name: Push Slack Notification
-        uses: storyprotocol/gha-workflows/.github/workflows/reusable-slack-notifs.yml@main
-        with:
-          short-desc: "${{ github.repository }}: API Integration Tests have been completed. Check the results at https://storyprotocol.github.io/api-integration-tests/index.html"
-          title: "API Integration Test Results"
-          img-url: "http://www.quickmeme.com/img/b9/b9848df257b95cd39585368475a4b4e4a3a8c774f7390226daecb79b912087ad.jpg"
-          img-alt-text: "API Integration Test Results"
-        secrets:
-          channel-name: ${{ secrets.SLACK_CHANNEL_ID_API_INTEGRATION_TESTS }}
-          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
-
       - name: Upload Test Results
         uses: actions/upload-artifact@5d5d22a31266ced268874388b861e4b58bb5c2f3 # v4.3.1
         # if: failure() && github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -77,3 +66,15 @@ jobs:
           name: sepolia-test-reports
           path: |
             ./playwright-report-sepolia/index.html
+
+  push-slack-notification:
+    name: Push Slack Notification
+    uses: storyprotocol/gha-workflows/.github/workflows/reusable-slack-notifs.yml@main
+    with:
+      short-desc: "${{ github.repository }}: API Integration Tests have been completed. Check the results at https://storyprotocol.github.io/api-integration-tests/index.html"
+      title: "API Integration Test Results"
+      img-url: "http://www.quickmeme.com/img/b9/b9848df257b95cd39585368475a4b4e4a3a8c774f7390226daecb79b912087ad.jpg"
+      img-alt-text: "API Integration Test Results"
+    secrets:
+      channel-name: ${{ secrets.SLACK_CHANNEL_ID_API_INTEGRATION_TESTS }}
+      slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
