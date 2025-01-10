@@ -159,7 +159,7 @@ test.describe("List Disputes @Disputes", async () => {
   //   });
   // }
 
-  test("Should return disputts list with filter", async ({
+  test("Should return disputes list with filter", async ({
     request,
     disputes,
   }) => {
