@@ -60,8 +60,8 @@ jobs:
     name: Push Slack Notification
     uses: storyprotocol/gha-workflows/.github/workflows/reusable-slack-notifs.yml@main
     with:
-      short-desc: "${{ github.repository }}: API Integration Tests of Prod have been completed. Check the results at https://storyprotocol.github.io/api-integration-tests/index.html"
-      title: "API Integration Test Results of Prod"
+      short-desc: "${{ github.repository }}: API Integration Tests for Prod have been completed. Check the results at https://storyprotocol.github.io/api-integration-tests/index.html"
+      title: "API Integration Test Results for Prod"
       img-url: "http://www.quickmeme.com/img/b9/b9848df257b95cd39585368475a4b4e4a3a8c774f7390226daecb79b912087ad.jpg"
       img-alt-text: "API Integration Test Results"
     secrets:
