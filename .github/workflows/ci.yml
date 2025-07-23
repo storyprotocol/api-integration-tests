@@ -8,11 +8,11 @@ on:
     branches:
       - main
   workflow_dispatch:
-  schedule:
+  #schedule:
     # Runs at 10:00 UTC from March to November (PDT, UTC-7)
-    - cron: '0 10 * 3-11 *'
+    # - cron: '0 10 * 3-11 *'
     # Runs at 11:00 UTC from November to March (PST, UTC-8)
-    - cron: '0 11 * 1-3,11,12 *'
+    # - cron: '0 11 * 1-3,11,12 *'
 
 jobs:
 
